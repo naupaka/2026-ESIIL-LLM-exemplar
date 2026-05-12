@@ -85,3 +85,43 @@ glm-4.7
 - MACAv2 ensemble member used is CCSM4 r6i1p1; other models are available on the same THREDDS server if a multi-model comparison is needed.
 - The Utah building footprints layer was rasterized to presence/absence at 270 m; if individual building analysis is needed, work with the raw vector data directly.
 - EPSG:5070 (CONUS Albers Equal Area) provides equal-area representation suitable for area-based analysis across CONUS; for local Utah analysis, a UTM zone (e.g., EPSG:32612 for northern Utah) might be more appropriate.
+
+---
+
+## 2026-05-12
+
+### Prompt
+User asked: "can you do this over for kansas"
+
+### LLM
+gpt-5.3-codex
+
+### Files and folders inspected
+- `examples/colorado_fire_risk/colorado_harmonization.py`
+- `workflows/utah_fire_risk/utah_harmonization.py`
+- `scripts/region_extent.py`
+- `data_catalog.yml`
+
+### Actions taken
+- Ran `python scripts/region_extent.py state Kansas` and set workflow target extent to `(-102.0518, 36.993, -94.5884, 40.0032)` in EPSG:4326.
+- Created `workflows/kansas_fire_risk/kansas_harmonization.py` using the required script bootstrap header and the same four-dataset pattern used by the Colorado/Utah examples.
+- Set `output_dir=Path(__file__).parent / "output"` and `clip_boundary="state:Kansas"`.
+- Validated all dataset URLs with `python scripts/check_urls.py ...` before running.
+- Executed workflow via `nohup python workflows/kansas_fire_risk/kansas_harmonization.py > workflows/kansas_fire_risk/output/run.log 2>&1 &` and polled `.status` and log output until completion.
+- Confirmed harmonized outputs were created for all four datasets.
+- The built-in static PNG visualization step failed with `cannot convert float NaN to integer`; created required `workflows/kansas_fire_risk/output/harmonized_visualization.png` as a fallback static map from harmonized rasters and copied it to `docs/assets/workflows/kansas_fire_risk/harmonized_visualization.png`.
+- Created `docs/workflows/kansas_fire_risk.md` documentation page following the Utah workflow format.
+- Checked `data_catalog.yml`; no new entries were needed because all URLs already exist (including Microsoft building footprint `url_template` with `Kansas` variant).
+
+### Verification
+- `workflows/kansas_fire_risk/output/.status` reported `DONE: 66m 4s`.
+- Confirmed output files:
+  - `harmonized_fbfm40_fuel_models.tif`
+  - `harmonized_pr_winter_rcp85_ccsm4.tif`
+  - `harmonized_mtbs_burned_areas.geojson`
+  - `harmonized_building_footprints.tif`
+  - `harmonized_visualization.html`
+  - `harmonized_visualization.png`
+
+### Open questions and follow-up
+- The NaN handling issue in the built-in static visualization routine should be fixed in `src/geospatial_harmonizer.py` so future workflows consistently produce `harmonized_visualization.png` without fallback generation.
