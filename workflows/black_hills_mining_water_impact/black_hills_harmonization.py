@@ -1,0 +1,260 @@
+#!/usr/bin/env python3
+"""
+Black Hills Mining & Water Impact Analysis - Harmonization Workflow
+
+This workflow harmonizes all available geospatial datasets covering the Black Hills
+region (South Dakota & Wyoming) to assess historical and future impacts of mining
+on water resources, with emphasis on sovereign tribal lands.
+
+Key Themes:
+- Mining contamination & water quality
+- Hydrological systems & watersheds
+- Tribal sovereignty & environmental justice
+- Land cover & vegetation change over time
+- Climate trends & projections
+- Fire history & fuel models
+
+Spatial Extent:
+- Extended Black Hills region with ~100 mile buffer
+- Bounding Box: (-105.5°, 42.5°, -101.5°, 45.5°) in EPSG:4326
+- Coverage: South Dakota, Wyoming, partial Nebraska
+- Tribal Priority: Pine Ridge, Rosebud, Black Hills Six Tribes lands
+
+Datasets:
+1. EPA Uranium Mine Locations (vector) - Historical mining sites
+2. USGS Watershed Boundary Dataset (vector) - HUC2-HUC12 watersheds
+3. USGS 3D Hydrography Program (vector) - Flowlines, waterbodies
+4. Census TIGER AIANNH 2025 (vector) - Tribal area boundaries
+5. National Atlas of Indian Lands (vector) - Historical tribal lands
+6. NLCD Annual Land Cover 2024 (raster) - Current land cover
+7. Hansen Forest Loss Year (raster) - Forest change detection
+8. Hansen Tree Cover 2000 (raster) - Baseline tree canopy
+9. TerraClimate Precipitation (raster, STAC) - Monthly precipitation
+10. TerraClimate Drought PDSI (raster, STAC) - Drought index
+11. Census TIGER Counties 2025 (vector) - County boundaries
+12. Census TIGER States 2025 (vector) - State boundaries
+13. MTBS Burned Areas (vector) - Fire perimeters
+14. Microsoft Building Footprints SD (vector, rasterized) - Settlement patterns
+15. FBFM40 Fuel Models (raster) - Fire behavior fuel types
+
+All outputs are harmonized to:
+- CRS: EPSG:4326
+- Extent: Extended Black Hills region
+- Resolution: ~270m (0.00243°)
+"""
+
+import sys
+from pathlib import Path
+
+# Walk up to find the repo root (dir containing src/geospatial_harmonizer.py).
+# Depth-agnostic — works regardless of how nested this script is.
+_repo_root = next(p for p in Path(__file__).resolve().parents
+                  if (p / "src" / "geospatial_harmonizer.py").exists())
+sys.path.insert(0, str(_repo_root))
+
+from src.geospatial_harmonizer import (
+    DatasetSpec,
+    ExampleWorkflow,
+    run_harmonization_example,
+)
+
+# Extended Black Hills bounding box (~100 mile buffer around core region)
+# Covers western SD, northeastern WY, and partial Nebraska
+BLACK_HILLS_EXTENT = (-105.5, 42.5, -101.5, 45.5)
+
+# Common output settings
+TARGET_CRS = "EPSG:4326"
+TARGET_RESOLUTION = 0.00243  # ~270m at this latitude
+
+# Output goes into this project's own folder
+OUTPUT_DIR = Path(__file__).parent / "output"
+
+# ── Dataset Specifications ──────────────────────────────────────────────────────
+
+DATASETS = [
+    # ── Mining & Contamination (Primary Focus) ──────────────────────────────────
+    
+    # EPA Uranium Mine Locations - Historical mining sites
+    DatasetSpec(
+        name="uranium_mine_locations",
+        display_name="Uranium Mine Sites",
+        description="EPA uranium mining locations (historical)",
+        url="https://www.epa.gov/sites/default/files/2015-03/uld-ii_gis.zip",
+        data_type="vector",
+        rasterize=False,
+    ),
+    
+    # BLM National MLRS Mining Claims (Not Closed) - Active mining claims
+    DatasetSpec(
+        name="blm_mining_claims_not_closed",
+        display_name="BLM Mining Claims (Active)",
+        description="BLM Mineral and Land Record System mining claims - not closed",
+        url="https://gbp-blm-egis.hub.arcgis.com/api/download/v1/items/abec5ef96dc8495d9c29a01b30cc04ee/shapefile?layers=0",
+        data_type="vector",
+        rasterize=False,
+   ),
+    
+    # ── Hydrology & Water Resources (Primary Focus) ────────────────────────────
+    
+    # Note: USGS WBD (GDB format) and 3DHP (GeoPackage) are excluded because
+    # the harmonizer only discovers .shp and .geojson vector files.
+    # These datasets require pre-conversion with ogr2ogr before harmonization.
+    
+    # Note: STAC datasets (TerraClimate, NOAA NClimGrid) are excluded because
+    # Planetary Computer STAC assets require blob URL signing (authentication)
+    # that the harmonizer cannot perform. Direct-download datasets only.
+    
+    # ── Land Cover & Vegetation Change (Secondary Focus) ───────────────────────
+    
+    # NLCD Annual Land Cover 2024 - Current land cover classification
+    DatasetSpec(
+        name="nlcd_2024",
+        display_name="Land Cover 2024",
+        description="NLCD annual land cover classification (2024)",
+        url="https://www.mrlc.gov/downloads/sciweb1/shared/mrlc/data-bundles/Annual_NLCD_LndCov_2024_CU_C1V1.zip",
+        data_type="raster",
+        resampling_method="nearest",
+    ),
+    
+    # Hansen Global Forest Change - Loss Year
+    DatasetSpec(
+        name="hansen_forest_loss",
+        display_name="Forest Loss Year",
+        description="Hansen Global Forest Change loss year (2000-2024)",
+        url="https://storage.googleapis.com/earthenginepartners-hansen/GFC-2024-v1.12/Hansen_GFC-2024-v1.12_lossyear_50N_110W.tif",
+        data_type="raster",
+        resampling_method="nearest",
+    ),
+    
+    # Hansen Global Forest Change - Tree Cover 2000 (baseline)
+    DatasetSpec(
+        name="hansen_tree_cover_2000",
+        display_name="Tree Cover 2000",
+        description="Hansen tree canopy cover baseline (2000)",
+        url="https://storage.googleapis.com/earthenginepartners-hansen/GFC-2024-v1.12/Hansen_GFC-2024-v1.12_treecover2000_50N_110W.tif",
+        data_type="raster",
+        resampling_method="bilinear",
+    ),
+    
+    # FBFM40 Fire Behavior Fuel Models 2024 - Vegetation/fuel types
+    DatasetSpec(
+        name="fbfm40_fuel_models",
+        display_name="Fire Fuel Models",
+        description="LANDFIRE FBFM40 fuel models (2024)",
+        url="https://www.landfire.gov/data-downloads/CONUS_LF2024/LF2024_FBFM40_CONUS.zip",
+        data_type="raster",
+        resampling_method="nearest",
+        labels_url="https://landfire.gov/sites/default/files/CSV/2024/LF2024_FBFM40.csv",
+    ),
+    
+    # ── Tribal & Administrative Boundaries (Context) ───────────────────────────
+    
+    # Census TIGER AIANNH 2025 - Tribal area boundaries
+    DatasetSpec(
+        name="tribal_boundaries_aiannh",
+        display_name="Tribal Area Boundaries",
+        description="Census AIANNH 2025 tribal boundaries",
+        url="https://www2.census.gov/geo/tiger/TIGER2025/AIANNH/tl_2025_us_aiannh.zip",
+        data_type="vector",
+        rasterize=False,
+    ),
+    
+    # Note: National Atlas of Indian Lands (.tar.gz) is excluded because
+    # the harmonizer only extracts .zip archives, not .tar.gz.
+    
+    # Census TIGER Counties 2025 - County boundaries
+    DatasetSpec(
+        name="county_boundaries",
+        display_name="County Boundaries",
+        description="Census TIGER 2025 county polygons",
+        url="https://www2.census.gov/geo/tiger/TIGER2025/COUNTY/tl_2025_us_county.zip",
+        data_type="vector",
+        rasterize=False,
+    ),
+    
+    # Census TIGER States 2025 - State boundaries
+    DatasetSpec(
+        name="state_boundaries",
+        display_name="State Boundaries",
+        description="Census TIGER 2025 state polygons",
+        url="https://www2.census.gov/geo/tiger/TIGER2025/STATE/tl_2025_us_state.zip",
+        data_type="vector",
+        rasterize=False,
+    ),
+    
+    # ── Fire History & Infrastructure (Context) ────────────────────────────────
+    
+    # MTBS Burned Area Boundaries - Fire perimeters 1984-present
+    DatasetSpec(
+        name="mtbs_burned_areas",
+        display_name="Fire Perimeters",
+        description="MTBS burned area boundaries (1984-present)",
+        url="https://edcintl.cr.usgs.gov/downloads/sciweb1/shared/MTBS_Fire/data/composite_data/burned_area_extent_shapefile/mtbs_perimeter_data.zip",
+        data_type="vector",
+        rasterize=False,
+    ),
+    
+    # Microsoft Building Footprints South Dakota - Human settlement patterns
+    DatasetSpec(
+        name="building_footprints_sd",
+        display_name="Building Footprints SD",
+        description="Microsoft building footprints (South Dakota)",
+        url="https://minedbuildings.z5.web.core.windows.net/legacy/usbuildings-v2/SouthDakota.geojson.zip",
+        data_type="vector",
+        rasterize=True,
+        burn_value=1,
+    ),
+]
+
+
+def main() -> int:
+    """Run the Black Hills mining & water impact harmonization workflow."""
+    workflow = ExampleWorkflow(
+        name="black_hills_mining_water_impact",
+        datasets=DATASETS,
+        target_crs=TARGET_CRS,
+        target_extent=BLACK_HILLS_EXTENT,
+        target_resolution=TARGET_RESOLUTION,
+        output_dir=OUTPUT_DIR,
+        create_visualization=True,
+        verbose=True,
+        clip_boundary=None,  # Use bounding box for extended region
+    )
+    
+    output_files, interactive_map = run_harmonization_example(workflow)
+    
+    print("\n" + "=" * 70)
+    print("Black Hills Mining & Water Impact Harmonization Complete")
+    print("=" * 70)
+    print(f"\nOutputs saved to: {OUTPUT_DIR.resolve()}")
+    
+    print("\nGenerated Files:")
+    for path in output_files:
+        print(f"  - {path.name}")
+    
+    viz_path = OUTPUT_DIR / "harmonized_visualization.png"
+    composite_path = OUTPUT_DIR / "harmonized_visualization_composite.png"
+    
+    print("\nGenerated Visualizations:")
+    if viz_path.exists():
+        print(f"  - Per-layer PNG: {viz_path.name}")
+    if composite_path.exists():
+        print(f"  - Composite PNG: {composite_path.name}")
+    if interactive_map is not None:
+        print("  - Interactive map: harmonized_visualization.html")
+    
+    print("\n" + "=" * 70)
+    print("Key Analysis Themes:")
+    print("  1. Mining-Water Proximity: Uranium sites vs watersheds")
+    print("  2. Tribal Sovereignty: Mining impacts on AIANNH lands")
+    print("  3. Environmental Justice: Historical context + current data")
+    print("  4. Land Cover Change: Vegetation loss near mining sites")
+    print("  5. Climate Trends: Precipitation/drought patterns")
+    print("  6. Fire History: Burned areas & fuel models")
+    print("=" * 70)
+    
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

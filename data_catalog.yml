@@ -139,6 +139,16 @@ datasets:
     topics: [hazards, contamination, mining]
     notes: Point/polygon locations of uranium mines in the US. From ESIIL Data Library hazards/Uranium_mines.
 
+  - name: BLM National MLRS Mining Claims (Not Closed)
+    type: vector
+    source: BLM / data.gov
+    url: https://gbp-blm-egis.hub.arcgis.com/api/download/v1/items/abec5ef96dc8495d9c29a01b30cc04ee/shapefile?layers=0
+    topics: [mining, boundaries, administrative]
+    notes: >
+      Active mining claim case boundaries from BLM's Mineral and Land Record System (MLRS).
+      Shapefile format via direct download. Geometries derived from Public Land Survey System (PLSS).
+      Data quality scores indicate mapping accuracy. Covers all US.
+
   - name: USGS Watershed Boundary Dataset (WBD) — National
     type: vector
     source: USGS / USDA

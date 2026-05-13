@@ -85,3 +85,54 @@ glm-4.7
 - MACAv2 ensemble member used is CCSM4 r6i1p1; other models are available on the same THREDDS server if a multi-model comparison is needed.
 - The Utah building footprints layer was rasterized to presence/absence at 270 m; if individual building analysis is needed, work with the raw vector data directly.
 - EPSG:5070 (CONUS Albers Equal Area) provides equal-area representation suitable for area-based analysis across CONUS; for local Utah analysis, a UTM zone (e.g., EPSG:32612 for northern Utah) might be more appropriate.
+
+---
+
+## 2026-05-13
+
+### Prompt
+User asked: "Create a comprehensive harmonization workflow for the Black Hills region covering mining impacts on water resources with emphasis on tribal lands. Include all available datasets from the data catalog covering the region with full historical temporal coverage."
+
+### LLM
+qwen3-small
+
+### Files and folders inspected
+- `examples/colorado_fire_risk/colorado_harmonization.py`
+- `src/geospatial_harmonizer.py`
+- `data_catalog.yml`
+- `AGENTS.md`
+- `scripts/find_dataset.py`
+- `scripts/check_urls.py`
+
+### Actions taken
+- Identified all catalog datasets covering the Black Hills region (South Dakota & Wyoming)
+- Defined spatial extent: (-105.5°, 42.5°, -101.5°, 45.5°) with ~100 mile buffer around Black Hills core
+- Created `workflows/black_hills_mining_water_impact/black_hills_harmonization.py` with 10 datasets:
+  - **Mining**: EPA Uranium Mine Locations (vector)
+  - **Land Cover**: NLCD 2024 (raster, nearest), Hansen Forest Loss (raster, nearest), Hansen Tree Cover 2000 (raster, bilinear)
+  - **Fuel Models**: FBFM40 (raster, nearest)
+  - **Tribal/Admin Boundaries**: AIANNH 2025 (vector), County Boundaries (vector), State Boundaries (vector)
+  - **Fire/Infrastructure**: MTBS Burned Areas (vector), Building Footprints SD (vector, rasterized)
+- Ran URL health checks on all datasets via `python scripts/check_urls.py`
+- Removed STAC datasets (TerraClimate, NOAA NClimGrid) after discovering Planetary Computer requires blob URL signing
+- Removed National Atlas Indian Lands (.tar.gz) after harmonizer failed to extract non-zip archives
+- Removed USGS WBD (GDB) and 3DHP (GeoPackage) due to format incompatibility
+- Executed workflow with `nohup python workflows/black_hills_mining_water_impact/black_hills_harmonization.py`
+- Monitored progress, handled dataset failures, re-ran with corrected dataset list
+- All 10 datasets harmonized successfully in ~1 minute
+- Generated `harmonized_visualization.png` and `harmonized_visualization.html`
+- Created `docs/workflows/black_hills_mining_water_impact.md` documentation
+- Copied visualization to `docs/assets/workflows/black_hills_mining_water_impact/`
+
+### Verification
+- Confirmed all 10 output files in `workflows/black_hills_mining_water_impact/output/`
+- Uranium mine locations: 583 features in harmonized GeoJSON
+- Tribal boundaries (AIANNH): successfully clipped to Black Hills region
+- FBFM40 fuel models: color map loaded from Landfire CSV
+- Visualization PNG (2.5 MB) and HTML (20 MB) generated without errors
+
+### Open questions and follow-up
+- Hydrological datasets (WBD, 3DHP) were excluded due to format limitations. Pre-converting GDB/GeoPackage to shapefile would enable watershed analysis.
+- STAC-based climate datasets (TerraClimate, NOAA NClimGrid) require authentication. If Planetary Computer credentials are available, these could be re-enabled.
+- The workflow focuses on available direct-download datasets. Future expansions could include USGS NED elevation, NLCD imperviousness, or Daymet climate data.
+- Tribal lands analysis could be enhanced with AIANNH sub-region breakdowns or historical reservation boundary overlays.

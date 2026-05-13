@@ -27,7 +27,7 @@ build an `ExampleWorkflow`, call `run_harmonization_example()`.
    mkdir -p workflows/<name>/output
    nohup python workflows/<name>/<script>.py > workflows/<name>/output/run.log 2>&1 &
    ```
-   Poll `.status` (first at 2 min, then every 3 min). Wait for completion before re-running.
+   Poll `.status` every 10 seconds. Wait for completion before re-running.
 
 ## After It Runs
 

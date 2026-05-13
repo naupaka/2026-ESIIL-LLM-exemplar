@@ -682,7 +682,18 @@ def download_stac_item(
 
 
 def extract_archive_if_needed(path: Path, output_dir: Path, verbose: bool = True) -> Path:
-    if path.suffix.lower() != ".zip":
+    # Check if file is a ZIP archive by extension or magic bytes
+    is_zip = path.suffix.lower() == ".zip"
+    if not is_zip and path.exists():
+        # Check magic bytes for ZIP signature (PK\x03\x04)
+        try:
+            with open(path, "rb") as f:
+                magic = f.read(4)
+                is_zip = magic == b"PK\x03\x04"
+        except (IOError, OSError):
+            pass
+
+    if not is_zip:
         return path.parent
 
     extract_dir = output_dir / path.stem
@@ -2235,6 +2246,47 @@ def _get_layer_style(name: str, data: np.ndarray, index: int, *,
     }
 
 
+def _convert_points_to_circles(geojson_data, radius_deg=0.005):
+    """Convert Point and MultiPoint geometries to small circle polygons.
+
+    This avoids the default Leaflet marker rendering which cannot be
+    controlled via layer toggles. The circles are approximated as 12-sided
+    polygons centered on each point.
+    """
+    import math
+    features = geojson_data.get("features", [])
+    for feature in features:
+        geom = feature.get("geometry", {})
+        geom_type = geom.get("type")
+        coords = geom.get("coordinates")
+        if geom_type == "Point" and coords:
+            lon, lat = coords[0], coords[1]
+            circle_coords = []
+            for i in range(13):
+                angle = 2 * math.pi * i / 12
+                circle_coords.append([
+                    lon + radius_deg * math.cos(angle),
+                    lat + radius_deg * math.sin(angle),
+                ])
+            circle_coords.append(circle_coords[0])  # close ring
+            geom["type"] = "Polygon"
+            geom["coordinates"] = [circle_coords]
+        elif geom_type == "MultiPoint" and coords:
+            # Convert each sub-point to a separate polygon feature
+            feature["geometry"]["type"] = "MultiPolygon"
+            feature["geometry"]["coordinates"] = [
+                [
+                    [
+                        c[0] + radius_deg * math.cos(2 * math.pi * i / 12),
+                        c[1] + radius_deg * math.sin(2 * math.pi * i / 12),
+                    ]
+                    for i in range(13)
+                ]
+                for c in coords
+            ]
+    return geojson_data
+
+
 def _get_vector_style(name: str) -> dict:
     """Get color scheme and styling for a vector layer based on its name.
     
@@ -2538,6 +2590,11 @@ def _create_interactive_visualization_impl(
                 except Exception as _e:
                     _log(f"  Could not reproject vector for interactive map: {_e}", verbose)
 
+            # Convert Point geometries to small circle polygons so they render
+            # as styled circles (not default Leaflet markers) and respect layer
+            # visibility toggles. folium's point_to_layer_function cannot be used
+            # because it triggers JSON serialization errors.
+            geojson_data = _convert_points_to_circles(geojson_data, radius_deg=0.005)
             geojson_str = json.dumps(geojson_data)
             _display = _get_display_name(name, metadata)
             geojson_layer = folium.GeoJson(
