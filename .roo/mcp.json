@@ -1,0 +1,12 @@
+{
+	"mcpServers": {
+		"exa": {
+			"type": "streamable-http",
+			"url": "https://mcp.exa.ai/mcp",
+			"alwaysAllow": [
+				"web_search_exa",
+				"web_fetch_exa"
+			]
+		}
+	}
+}
