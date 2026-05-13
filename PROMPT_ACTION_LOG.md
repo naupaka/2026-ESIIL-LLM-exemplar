@@ -136,3 +136,44 @@ qwen3-small
 - STAC-based climate datasets (TerraClimate, NOAA NClimGrid) require authentication. If Planetary Computer credentials are available, these could be re-enabled.
 - The workflow focuses on available direct-download datasets. Future expansions could include USGS NED elevation, NLCD imperviousness, or Daymet climate data.
 - Tribal lands analysis could be enhanced with AIANNH sub-region breakdowns or historical reservation boundary overlays.
+
+---
+
+## 2026-05-13
+
+### Prompt
+"OK now I want to get the new exploration notices of intent and uranium exploration permit applications from this site https://danr.sd.gov/Environment/MineralsMining/Exploration/NewEXNIS.aspx and add them as a layer"
+
+Follow-up: "can you download the pdfs and parse the text content and add the locations to the map as a new layer?"
+
+Follow-up: "I want you to try even though it's outside the harmonizer's scope. there aren't that many pdfs to download"
+
+### Files and folders inspected
+- `https://danr.sd.gov/Environment/MineralsMining/Exploration/NewEXNIS.aspx` — parsed HTML to collect all PDF links
+- `https://danr.sd.gov/Environment/MineralsMining/Exploration/docs/EXNI453App2.pdf` — Clean Nuclear Chord Project application (legal description extracted: Sec 36, T7S R2E)
+- `https://danr.sd.gov/Environment/MineralsMining/Exploration/docs/EXNI469App.pdf` — Pete Lien EXNI 469 (Secs 3,4,5 T1N R3E; Secs 25,30,33 T2N R3E)
+- `https://danr.sd.gov/Environment/MineralsMining/Exploration/docs/EXNI470App.pdf` — Solitario EXNI 470 (T4N R2E Secs 28,32,33; T3N R2E Secs 4,5,6,7,8,9,16; T4N R1E Secs 21,22,28)
+- `https://sdgis.sd.gov/danr/rest/services` — confirmed Mining_Minerals folder exists (timed out on contents)
+
+### Actions taken
+1. Fetched DANR EXNI page HTML and extracted all PDF URLs (130+ PDFs listed)
+2. Downloaded 9 key application and map PDFs to `/tmp/danr_pdfs/`
+3. Installed `pdfplumber` library and extracted text from PDFs — found PLSS legal descriptions in EXNI453App2, EXNI469App, EXNI470App; others were scanned images with no extractable text
+4. Wrote `workflows/black_hills_mining_water_impact/parse_exni_to_geojson.py` to convert PLSS legal descriptions (Black Hills Meridian) to GeoJSON polygons via section_centroid math
+5. Generated `workflows/black_hills_mining_water_impact/output/danr_exni_uranium_applications.geojson` (6 features, all within Black Hills extent -105.5°–-101.5°, 42.5°–45.5°)
+6. Copied GeoJSON as `harmonized_danr_exni_applications.geojson` so harmonizer skips download and uses pre-built data
+7. Added `DatasetSpec(name="danr_exni_applications", ...)` with `file://` URL to `black_hills_harmonization.py`
+8. Re-ran workflow (`nohup python ...`) — completed in 26 seconds; new HTML (41 MB) references EXNI layer 4× confirmed
+9. Copied updated PNG to `docs/assets/workflows/black_hills_mining_water_impact/harmonized_visualization.png`
+10. Updated `docs/workflows/black_hills_mining_water_impact.md` dataset table and "What Was Harmonized" section
+
+### Verification
+- `.status` → `DONE: 0m 26s`
+- `grep -c "EXNI" harmonized_visualization.html` → 4 matches
+- All 6 EXNI features in Black Hills extent confirmed
+- PNG (2.5 MB) and HTML (41 MB) updated at 22:57–22:58 UTC
+
+### Open questions and follow-up
+- PLSS coordinates for Hoff and F3 Gold applications are approximate (PDFs were scanned images, no extractable text). County notifications list these as Pennington County but don't provide section-level descriptions.
+- South Dakota ArcGIS REST Services Mining_Minerals layer may provide authoritative GIS data if accessible (currently times out); this would supersede the PLSS-derived GeoJSON.
+- Test hole locations remain confidential per SDCL 45-6C-14 and SDCL 45-6D-15 and are not in any publicly available dataset.

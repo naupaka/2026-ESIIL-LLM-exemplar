@@ -21,21 +21,23 @@ Spatial Extent:
 - Tribal Priority: Pine Ridge, Rosebud, Black Hills Six Tribes lands
 
 Datasets:
-1. EPA Uranium Mine Locations (vector) - Historical mining sites
-2. USGS Watershed Boundary Dataset (vector) - HUC2-HUC12 watersheds
-3. USGS 3D Hydrography Program (vector) - Flowlines, waterbodies
-4. Census TIGER AIANNH 2025 (vector) - Tribal area boundaries
-5. National Atlas of Indian Lands (vector) - Historical tribal lands
-6. NLCD Annual Land Cover 2024 (raster) - Current land cover
-7. Hansen Forest Loss Year (raster) - Forest change detection
-8. Hansen Tree Cover 2000 (raster) - Baseline tree canopy
-9. TerraClimate Precipitation (raster, STAC) - Monthly precipitation
-10. TerraClimate Drought PDSI (raster, STAC) - Drought index
-11. Census TIGER Counties 2025 (vector) - County boundaries
-12. Census TIGER States 2025 (vector) - State boundaries
-13. MTBS Burned Areas (vector) - Fire perimeters
-14. Microsoft Building Footprints SD (vector, rasterized) - Settlement patterns
-15. FBFM40 Fuel Models (raster) - Fire behavior fuel types
+1.  EPA Uranium Mine Locations (vector) - Historical mining sites
+2.  BLM Mining Claims Active (vector) - Active BLM mining claim records
+3.  SD DANR EXNI & Uranium Exploration Permits (vector) - Active exploration applications
+4.  USGS Watershed Boundary Dataset (vector) - HUC2-HUC12 watersheds
+5.  USGS 3D Hydrography Program (vector) - Flowlines, waterbodies
+6.  Census TIGER AIANNH 2025 (vector) - Tribal area boundaries
+7.  National Atlas of Indian Lands (vector) - Historical tribal lands
+8.  NLCD Annual Land Cover 2024 (raster) - Current land cover
+9.  Hansen Forest Loss Year (raster) - Forest change detection
+10. Hansen Tree Cover 2000 (raster) - Baseline tree canopy
+11. TerraClimate Precipitation (raster, STAC) - Monthly precipitation
+12. TerraClimate Drought PDSI (raster, STAC) - Drought index
+13. Census TIGER Counties 2025 (vector) - County boundaries
+14. Census TIGER States 2025 (vector) - State boundaries
+15. MTBS Burned Areas (vector) - Fire perimeters
+16. Microsoft Building Footprints SD (vector, rasterized) - Settlement patterns
+17. FBFM40 Fuel Models (raster) - Fire behavior fuel types
 
 All outputs are harmonized to:
 - CRS: EPSG:4326
@@ -92,8 +94,23 @@ DATASETS = [
         url="https://gbp-blm-egis.hub.arcgis.com/api/download/v1/items/abec5ef96dc8495d9c29a01b30cc04ee/shapefile?layers=0",
         data_type="vector",
         rasterize=False,
-   ),
-    
+    ),
+
+    # SD DANR Exploration Notices of Intent (EXNI) & Uranium Exploration Permit Applications
+    # Locations derived from PDF applications filed with SD DANR Minerals & Mining Program.
+    # Legal descriptions (PLSS sections) converted to GeoJSON via Black Hills Meridian math.
+    # Source: https://danr.sd.gov/Environment/MineralsMining/Exploration/NewEXNIS.aspx
+    # Note: test hole locations are confidential per SDCL 45-6C-14 / 45-6D-15.
+    # The harmonized GeoJSON is pre-built by parse_exni_to_geojson.py in this directory.
+    DatasetSpec(
+        name="danr_exni_applications",
+        display_name="EXNI & Uranium Exploration Permits",
+        description="SD DANR active exploration notices of intent and uranium permit applications",
+        url=f"file://{(OUTPUT_DIR / 'harmonized_danr_exni_applications.geojson').resolve()}",
+        data_type="vector",
+        rasterize=False,
+    ),
+
     # ── Hydrology & Water Resources (Primary Focus) ────────────────────────────
     
     # Note: USGS WBD (GDB format) and 3DHP (GeoPackage) are excluded because

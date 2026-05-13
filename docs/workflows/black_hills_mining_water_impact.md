@@ -14,9 +14,11 @@ Harmonizes mining sites, hydrological features, land cover, tribal boundaries, a
 
 ## Datasets
 
-| Layer | Type | URL |
+| Layer | Type | Source |
 |---|---|---|
 | Uranium Mine Sites | vector | https://www.epa.gov/sites/default/files/2015-03/uld-ii_gis.zip |
+| BLM Mining Claims (Active) | vector | https://gbp-blm-egis.hub.arcgis.com/api/download/v1/items/abec5ef96dc8495d9c29a01b30cc04ee/shapefile?layers=0 |
+| EXNI & Uranium Exploration Permits | vector | SD DANR PDFs → PLSS geocoding (local GeoJSON, see `parse_exni_to_geojson.py`) |
 | Land Cover 2024 (NLCD) | raster | https://www.mrlc.gov/downloads/sciweb1/shared/mrlc/data-bundles/Annual_NLCD_LndCov_2024_CU_C1V1.zip |
 | Forest Loss Year (Hansen) | raster | https://storage.googleapis.com/earthenginepartners-hansen/GFC-2024-v1.12/Hansen_GFC-2024-v1.12_lossyear_50N_110W.tif |
 | Tree Cover 2000 (Hansen) | raster | https://storage.googleapis.com/earthenginepartners-hansen/GFC-2024-v1.12/Hansen_GFC-2024-v1.12_treecover2000_50N_110W.tif |
@@ -36,6 +38,8 @@ Harmonizes mining sites, hydrological features, land cover, tribal boundaries, a
 ## What Was Harmonized
 
 - **Uranium Mine Sites**: EPA historical uranium mining locations reprojected to EPSG:4326, clipped to Black Hills extent, kept as vector (583 features).
+- **BLM Mining Claims (Active)**: BLM Mineral and Land Record System (MLRS) mining claims not closed, reprojected to EPSG:4326, clipped to Black Hills extent, kept as vector (12,541 features).
+- **EXNI & Uranium Exploration Permits**: 6 active SD DANR exploration applications (Daniel Hoff, F3 Gold LLC, Clean Nuclear Energy Chord Project, Clean Nuclear Energy October Jinx Project, Pete Lien & Sons EXNI 469 Rochford Graphite, Solitario Resources Corp EXNI 470 Ponderosa Project). Locations derived from legal PLSS descriptions in PDF applications, converted to GeoJSON polygons using Black Hills Meridian math (see `parse_exni_to_geojson.py`). Test hole locations are confidential per SDCL 45-6C-14 and SDCL 45-6D-15.
 - **NLCD Land Cover 2024**: Annual land cover classification resampled with nearest-neighbor to preserve integer class codes.
 - **Hansen Forest Loss Year**: Forest loss timeline (2000-2024) resampled with nearest-neighbor (categorical).
 - **Hansen Tree Cover 2000**: Baseline tree canopy cover (2000) resampled with bilinear interpolation (continuous percentage).

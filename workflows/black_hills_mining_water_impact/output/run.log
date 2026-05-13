@@ -1,1 +1,135 @@
-python: can't open file '/home/jovyan/data-store/LLM_lesson_exemplar/workflows/black_hills_mining_water_impact/black_h_harmonization.py': [Errno 2] No such file or directory
+
+============================================================
+HARMONIZATION STARTED: black_hills_mining_water_impact
+  Datasets: 12
+  CRS: EPSG:4326  Resolution: 0.00243
+  Output: /home/jovyan/data-store/LLM_lesson_exemplar/workflows/black_hills_mining_water_impact/output
+  This typically takes 5-15 minutes. Do NOT re-run while in progress.
+  Check status: cat /home/jovyan/data-store/LLM_lesson_exemplar/workflows/black_hills_mining_water_impact/output/.status
+============================================================
+
+[1/12] Uranium Mine Sites
+Using existing harmonized file: harmonized_uranium_mine_locations.geojson
+
+[2/12] BLM Mining Claims (Active)
+Using existing harmonized file: harmonized_blm_mining_claims_not_closed.geojson
+
+[3/12] EXNI & Uranium Exploration Permits
+Using existing harmonized file: harmonized_danr_exni_applications.geojson
+
+[4/12] Land Cover 2024
+Using existing harmonized file: harmonized_nlcd_2024.tif
+
+[5/12] Forest Loss Year
+Using existing harmonized file: harmonized_hansen_forest_loss.tif
+
+[6/12] Tree Cover 2000
+Using existing harmonized file: harmonized_hansen_tree_cover_2000.tif
+
+[7/12] Fire Fuel Models
+Using existing harmonized file: harmonized_fbfm40_fuel_models.tif
+Loaded color map with 45 categories from file
+Loaded 46 labels from file
+
+[8/12] Tribal Area Boundaries
+Using existing harmonized file: harmonized_tribal_boundaries_aiannh.geojson
+
+[9/12] County Boundaries
+Using existing harmonized file: harmonized_county_boundaries.geojson
+
+[10/12] State Boundaries
+Using existing harmonized file: harmonized_state_boundaries.geojson
+
+[11/12] Fire Perimeters
+Using existing harmonized file: harmonized_mtbs_burned_areas.geojson
+
+[12/12] Building Footprints SD
+Using existing harmonized file: harmonized_building_footprints_sd.tif
+
+Generating visualizations (12 layers)...
+Creating static PNG visualization...
+  Processing layer 1/12: uranium_mine_locations
+  Processing layer 2/12: blm_mining_claims_not_closed
+  Processing layer 3/12: danr_exni_applications
+  Processing layer 4/12: nlcd_2024
+  Processing layer 5/12: hansen_forest_loss
+  Processing layer 6/12: hansen_tree_cover_2000
+  Processing layer 7/12: fbfm40_fuel_models
+  Processing layer 8/12: tribal_boundaries_aiannh
+  Processing layer 9/12: county_boundaries
+  Processing layer 10/12: state_boundaries
+  Processing layer 11/12: mtbs_burned_areas
+  Processing layer 12/12: building_footprints_sd
+Creating interactive HTML visualization (this may take several minutes for large layers)...
+  Processing layer 1/12: uranium_mine_locations
+  Adding vector layer: uranium_mine_locations
+  Processing layer 2/12: blm_mining_claims_not_closed
+  Adding vector layer: blm_mining_claims_not_closed
+  Processing layer 3/12: danr_exni_applications
+  Adding vector layer: danr_exni_applications
+  Processing layer 4/12: nlcd_2024
+  Adding raster layer: nlcd_2024
+  Processing layer 5/12: hansen_forest_loss
+  Adding raster layer: hansen_forest_loss
+  Processing layer 6/12: hansen_tree_cover_2000
+  Adding raster layer: hansen_tree_cover_2000
+  Processing layer 7/12: fbfm40_fuel_models
+  Adding raster layer: fbfm40_fuel_models
+  Processing layer 8/12: tribal_boundaries_aiannh
+  Adding vector layer: tribal_boundaries_aiannh
+  Processing layer 9/12: county_boundaries
+  Adding vector layer: county_boundaries
+  Processing layer 10/12: state_boundaries
+  Adding vector layer: state_boundaries
+  Processing layer 11/12: mtbs_burned_areas
+  Adding vector layer: mtbs_burned_areas
+  Processing layer 12/12: building_footprints_sd
+  Adding raster layer: building_footprints_sd
+Interactive visualization saved to: /home/jovyan/data-store/LLM_lesson_exemplar/workflows/black_hills_mining_water_impact/output/harmonized_visualization.html
+
+============================================================
+HARMONIZATION FINISHED: black_hills_mining_water_impact
+  Wall time: 0m 26s
+  Outputs: /home/jovyan/data-store/LLM_lesson_exemplar/workflows/black_hills_mining_water_impact/output
+============================================================
+
+────────────────────────────────────────────────────────────────────────
+✅ Harmonization complete. Required follow-up before declaring done:
+   [ ] Append a new entry to PROMPT_ACTION_LOG.md (project: 'black_hills_mining_water_impact')
+   [ ] Add any newly used dataset URLs to data_catalog.yml
+   [ ] Create docs/workflows/black_hills_mining_water_impact.md from the AGENTS.md template
+────────────────────────────────────────────────────────────────────────
+
+======================================================================
+Black Hills Mining & Water Impact Harmonization Complete
+======================================================================
+
+Outputs saved to: /home/jovyan/data-store/LLM_lesson_exemplar/workflows/black_hills_mining_water_impact/output
+
+Generated Files:
+  - harmonized_uranium_mine_locations.geojson
+  - harmonized_blm_mining_claims_not_closed.geojson
+  - harmonized_danr_exni_applications.geojson
+  - harmonized_nlcd_2024.tif
+  - harmonized_hansen_forest_loss.tif
+  - harmonized_hansen_tree_cover_2000.tif
+  - harmonized_fbfm40_fuel_models.tif
+  - harmonized_tribal_boundaries_aiannh.geojson
+  - harmonized_county_boundaries.geojson
+  - harmonized_state_boundaries.geojson
+  - harmonized_mtbs_burned_areas.geojson
+  - harmonized_building_footprints_sd.tif
+
+Generated Visualizations:
+  - Per-layer PNG: harmonized_visualization.png
+  - Interactive map: harmonized_visualization.html
+
+======================================================================
+Key Analysis Themes:
+  1. Mining-Water Proximity: Uranium sites vs watersheds
+  2. Tribal Sovereignty: Mining impacts on AIANNH lands
+  3. Environmental Justice: Historical context + current data
+  4. Land Cover Change: Vegetation loss near mining sites
+  5. Climate Trends: Precipitation/drought patterns
+  6. Fire History: Burned areas & fuel models
+======================================================================

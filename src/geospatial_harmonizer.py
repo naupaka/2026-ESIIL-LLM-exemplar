@@ -218,8 +218,36 @@ def build_grid_spec(
 
 
 def download_file(url: str, output_dir: Path, verbose: bool = True) -> Path:
+    import re
     output_dir.mkdir(parents=True, exist_ok=True)
-    output_path = output_dir / Path(url).name
+    
+    # Extract filename from Content-Disposition header or URL
+    # URLs with query params (e.g. ?layers=0) need special handling
+    request = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0"})
+    try:
+        with urllib.request.urlopen(request, timeout=10) as check_response:
+            content_type = (check_response.headers.get("Content-Type") or "").lower()
+            if "text/html" in content_type:
+                raise DatasetDownloadError(
+                    f"URL does not point to a downloadable file: {url}\n"
+                    f"  The server returned an HTML page (Content-Type: {content_type}).\n"
+                    f"  This is likely a web viewer or portal link, not a direct download URL.\n"
+                    f"  Please provide a direct download URL for this dataset."
+                )
+            # Try to get filename from Content-Disposition
+            content_disp = check_response.headers.get("Content-Disposition", "")
+            filename_match = re.search(r'filename="?([^";\n]+)"?', content_disp)
+            if filename_match:
+                filename = filename_match.group(1)
+            else:
+                # Fall back to URL path, stripping query params
+                from urllib.parse import urlparse
+                parsed = urlparse(url)
+                filename = Path(parsed.path).name or "download.zip"
+    except (urllib.error.HTTPError, urllib.error.URLError) as e:
+        filename = "download.zip"
+    
+    output_path = output_dir / filename
 
     if output_path.exists():
         _log(f"Using existing download: {output_path}", verbose)
@@ -234,6 +262,8 @@ def download_file(url: str, output_dir: Path, verbose: bool = True) -> Path:
             # file-sharing UI pages that return HTTP 200 but no actual data).
             content_type = (response.headers.get("Content-Type") or "").lower()
             if "text/html" in content_type:
+                if output_path.exists():
+                    output_path.unlink()
                 raise DatasetDownloadError(
                     f"URL does not point to a downloadable file: {url}\n"
                     f"  The server returned an HTML page (Content-Type: {content_type}).\n"
