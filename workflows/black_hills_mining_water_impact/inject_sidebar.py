@@ -14,49 +14,70 @@ Usage:
 """
 
 import re
+import sys
 from pathlib import Path
 
 HTML_PATH = Path(__file__).parent / "output" / "harmonized_visualization.html"
 
-# ── Layer metadata in DATASET ORDER ───────────────────────────────────────────
-# Index 0 = first non-tile-layer addTo call (tile layer is always index 0 in addTo list)
-# Matches the DATASETS list in black_hills_harmonization.py.
+# Pull the DATASETS list straight from the harmonization module so layer order
+# and labels stay in lockstep with what actually gets added to the map.
+sys.path.insert(0, str(Path(__file__).parent))
+from black_hills_harmonization import DATASETS  # noqa: E402
+
+# ── Per-layer UI extras (presentation only) ────────────────────────────────
+# Keyed by DatasetSpec.name. These don't belong on DatasetSpec because the
+# harmonizer is UI-agnostic. Datasets without an entry fall back to defaults.
 # tooltip_fields: property keys to show on mouseover (vector layers only).
-LAYER_META = [
-    {
-        "label": "Uranium Mine Sites", "icon": "☢️", "default_opacity": 0.8,
-        "tooltip_fields": ["MINE_NAME", "COUNTY_NAM"],
-    },
-    {
-        "label": "BLM Mining Claims (Active)", "icon": "⛏️", "default_opacity": 0.6,
-        "tooltip_fields": ["CSE_NAME", "BLM_PROD", "CSE_DISP"],
-    },
-    {
-        "label": "EXNI & Uranium Exploration Permits", "icon": "📋", "default_opacity": 0.9,
-        "tooltip_fields": ["name", "applicant", "county", "status"],
-    },
-    {"label": "Land Cover 2024 (NLCD)",        "icon": "🌿", "default_opacity": 0.7},
-    {"label": "Forest Loss Year (Hansen)",      "icon": "🌲", "default_opacity": 0.7},
-    {"label": "Tree Cover 2000 (Hansen)",       "icon": "🌳", "default_opacity": 0.7},
-    {"label": "Fire Fuel Models (FBFM40)",      "icon": "🔥", "default_opacity": 0.7},
-    {
-        "label": "Tribal Area Boundaries", "icon": "🏛️", "default_opacity": 0.7,
-        "tooltip_fields": ["NAMELSAD"],
-    },
-    {
-        "label": "County Boundaries", "icon": "🗺️", "default_opacity": 0.6,
-        "tooltip_fields": ["NAME", "STATEFP"],
-    },
-    {
-        "label": "State Boundaries", "icon": "🗾", "default_opacity": 0.6,
-        "tooltip_fields": ["NAME"],
-    },
-    {
-        "label": "Fire Perimeters (MTBS)", "icon": "🔴", "default_opacity": 0.7,
-        "tooltip_fields": ["incid_name", "ig_date", "burnbndac"],
-    },
-    {"label": "Building Footprints SD", "icon": "🏠", "default_opacity": 0.6},
-]
+LAYER_UI: dict[str, dict] = {
+    "uranium_mine_locations":      {"icon": "☢️", "default_opacity": 0.8,
+                                    "tooltip_fields": ["MINE_NAME", "COUNTY_NAM"]},
+    "blm_mining_claims_not_closed":{"icon": "⛏️", "default_opacity": 0.6,
+                                    "tooltip_fields": ["CSE_NAME", "BLM_PROD", "CSE_DISP"]},
+    "danr_exni_applications":      {"icon": "📋", "default_opacity": 0.9,
+                                    "tooltip_fields": ["name", "applicant", "county", "status"]},
+    "watersheds_huc8":             {"icon": "💧", "default_opacity": 0.5,
+                                    "tooltip_fields": ["Name", "HUC8", "States"]},
+    "nhd_waterbodies":             {"icon": "🏞️", "default_opacity": 0.7,
+                                    "tooltip_fields": ["GNIS_Name", "FType"]},
+    "nlcd_2024":                   {"icon": "🌿", "default_opacity": 0.7},
+    "hansen_forest_loss":          {"icon": "🌲", "default_opacity": 0.7},
+    "hansen_tree_cover_2000":      {"icon": "🌳", "default_opacity": 0.7},
+    "fbfm40_fuel_models":          {"icon": "🔥", "default_opacity": 0.7},
+    "tribal_boundaries_aiannh":    {"icon": "🏛️", "default_opacity": 0.7,
+                                    "tooltip_fields": ["NAMELSAD"]},
+    "county_boundaries":           {"icon": "🗺️", "default_opacity": 0.6,
+                                    "tooltip_fields": ["NAME", "STATEFP"]},
+    "state_boundaries":            {"icon": "🗾", "default_opacity": 0.6,
+                                    "tooltip_fields": ["NAME"]},
+    "mtbs_burned_areas":           {"icon": "🔴", "default_opacity": 0.7,
+                                    "tooltip_fields": ["incid_name", "ig_date", "burnbndac"]},
+    "building_footprints_sd":      {"icon": "🏠", "default_opacity": 0.6},
+}
+
+_UI_FALLBACK = {"icon": "📊", "default_opacity": 0.7, "tooltip_fields": []}
+
+
+def _build_layer_meta() -> list[dict]:
+    """Build LAYER_META from DATASETS so order + labels stay synced."""
+    metas: list[dict] = []
+    missing: list[str] = []
+    for ds in DATASETS:
+        ui = LAYER_UI.get(ds.name)
+        if ui is None:
+            missing.append(ds.name)
+            ui = {}
+        metas.append({
+            "label": ds.display_name or ds.name,
+            "icon": ui.get("icon", _UI_FALLBACK["icon"]),
+            "default_opacity": ui.get("default_opacity", _UI_FALLBACK["default_opacity"]),
+            "tooltip_fields": ui.get("tooltip_fields", _UI_FALLBACK["tooltip_fields"]),
+        })
+    if missing:
+        print(f"  Note: no LAYER_UI entry for {missing} — using defaults")
+    return metas
+
+
+LAYER_META = _build_layer_meta()
 
 
 SIDEBAR_CSS = """
@@ -248,7 +269,7 @@ def build_sidebar_js(layer_ids: list[str], map_var: str) -> str:
       var cb = document.createElement('input');
       cb.type = 'checkbox';
       cb.className = 'layer-toggle';
-      cb.checked = true;
+      cb.checked = false;
       cb.title = 'Toggle visibility';
       (function(id) {{
         cb.addEventListener('change', function() {{
@@ -256,6 +277,11 @@ def build_sidebar_js(layer_ids: list[str], map_var: str) -> str:
           if (!map || !l) return;
           if (this.checked) {{ l.addTo(map); }} else {{ map.removeLayer(l); }}
         }});
+      }})(meta.id);
+      // Default to off — remove the layer that Folium auto-added.
+      (function(id) {{
+        var map = getMap(), l = getLayer(id);
+        if (map && l && map.hasLayer(l)) {{ map.removeLayer(l); }}
       }})(meta.id);
 
       row.appendChild(handle);

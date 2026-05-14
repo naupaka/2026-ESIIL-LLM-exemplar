@@ -2915,17 +2915,32 @@ def _create_interactive_visualization_impl(
         opacity_html += f'''
       <div style="margin:6px 0 2px;">
         <div style="display:flex;align-items:center;gap:6px;">
-          <input type="checkbox" id="{js_name}_chk" checked style="cursor:pointer;"
+          <input type="checkbox" id="{js_name}_chk" style="cursor:pointer;"
                  onchange="{on_chk}">
           <label for="{js_name}_chk" style="flex:1;cursor:pointer;">{display_name}</label>
         </div>
-        <div id="{js_name}_row" style="display:flex;align-items:center;gap:6px;padding-left:20px;margin-top:3px;">
+        <div id="{js_name}_row" style="display:none;align-items:center;gap:6px;padding-left:20px;margin-top:3px;">
           <input type="range" id="{js_name}_sl" min="0" max="100" value="100"
                  style="flex:1;cursor:pointer;" oninput="{on_sl}">
           <span id="{js_name}_lbl" style="width:30px;text-align:right;font-size:11px;">100%</span>
         </div>
       </div>'''
     opacity_html += '\n    </div>'
+
+    # All layers default to OFF: hide each on load so the unchecked checkbox
+    # state matches the map state. Runs after Folium finishes adding layers.
+    hide_calls = []
+    for _, js_name, layer_type, _ in _opacity_layers:
+        if layer_type == 'vector':
+            hide_calls.append(f"if(typeof {js_name}!=='undefined'){{{js_name}.setStyle({{opacity:0,fillOpacity:0}});}}")
+        else:
+            hide_calls.append(f"if(typeof {js_name}!=='undefined'){{{js_name}.setOpacity(0);}}")
+    if hide_calls:
+        opacity_html += (
+            '\n    <script>setTimeout(function(){'
+            + ''.join(hide_calls)
+            + '}, 300);</script>'
+        )
     m.get_root().html.add_child(folium.Element(opacity_html))
 
     # Fit map view to the target extent so data is always visible
