@@ -4,6 +4,7 @@ Post-process harmonized_visualization.html to inject a fixed sidebar with:
 - Layer list (draggable to reorder z-index)
 - Toggle on/off checkbox
 - Opacity slider
+- Hover tooltips for vector layers
 
 Layer identification is done by POSITION in the addTo() sequence, which is
 deterministic and matches the DATASETS list in black_hills_harmonization.py.
@@ -19,20 +20,42 @@ HTML_PATH = Path(__file__).parent / "output" / "harmonized_visualization.html"
 
 # ── Layer metadata in DATASET ORDER ───────────────────────────────────────────
 # Index 0 = first non-tile-layer addTo call (tile layer is always index 0 in addTo list)
-# Matches the DATASETS list in black_hills_harmonization.py:
+# Matches the DATASETS list in black_hills_harmonization.py.
+# tooltip_fields: property keys to show on mouseover (vector layers only).
 LAYER_META = [
-    {"label": "Uranium Mine Sites",               "icon": "☢️",  "default_opacity": 0.8},
-    {"label": "BLM Mining Claims (Active)",        "icon": "⛏️",  "default_opacity": 0.6},
-    {"label": "EXNI & Uranium Exploration Permits","icon": "📋",  "default_opacity": 0.9},
-    {"label": "Land Cover 2024 (NLCD)",            "icon": "🌿",  "default_opacity": 0.7},
-    {"label": "Forest Loss Year (Hansen)",         "icon": "🌲",  "default_opacity": 0.7},
-    {"label": "Tree Cover 2000 (Hansen)",          "icon": "🌳",  "default_opacity": 0.7},
-    {"label": "Fire Fuel Models (FBFM40)",         "icon": "🔥",  "default_opacity": 0.7},
-    {"label": "Tribal Area Boundaries",            "icon": "🏛️",  "default_opacity": 0.7},
-    {"label": "County Boundaries",                 "icon": "🗺️",  "default_opacity": 0.6},
-    {"label": "State Boundaries",                  "icon": "🗾",  "default_opacity": 0.6},
-    {"label": "Fire Perimeters (MTBS)",            "icon": "🔴",  "default_opacity": 0.7},
-    {"label": "Building Footprints SD",            "icon": "🏠",  "default_opacity": 0.6},
+    {
+        "label": "Uranium Mine Sites", "icon": "☢️", "default_opacity": 0.8,
+        "tooltip_fields": ["MINE_NAME", "COUNTY_NAM"],
+    },
+    {
+        "label": "BLM Mining Claims (Active)", "icon": "⛏️", "default_opacity": 0.6,
+        "tooltip_fields": ["CSE_NAME", "BLM_PROD", "CSE_DISP"],
+    },
+    {
+        "label": "EXNI & Uranium Exploration Permits", "icon": "📋", "default_opacity": 0.9,
+        "tooltip_fields": ["name", "applicant", "county", "status"],
+    },
+    {"label": "Land Cover 2024 (NLCD)",        "icon": "🌿", "default_opacity": 0.7},
+    {"label": "Forest Loss Year (Hansen)",      "icon": "🌲", "default_opacity": 0.7},
+    {"label": "Tree Cover 2000 (Hansen)",       "icon": "🌳", "default_opacity": 0.7},
+    {"label": "Fire Fuel Models (FBFM40)",      "icon": "🔥", "default_opacity": 0.7},
+    {
+        "label": "Tribal Area Boundaries", "icon": "🏛️", "default_opacity": 0.7,
+        "tooltip_fields": ["NAMELSAD"],
+    },
+    {
+        "label": "County Boundaries", "icon": "🗺️", "default_opacity": 0.6,
+        "tooltip_fields": ["NAME", "STATEFP"],
+    },
+    {
+        "label": "State Boundaries", "icon": "🗾", "default_opacity": 0.6,
+        "tooltip_fields": ["NAME"],
+    },
+    {
+        "label": "Fire Perimeters (MTBS)", "icon": "🔴", "default_opacity": 0.7,
+        "tooltip_fields": ["incid_name", "ig_date", "burnbndac"],
+    },
+    {"label": "Building Footprints SD", "icon": "🏠", "default_opacity": 0.6},
 ]
 
 
@@ -123,7 +146,7 @@ SIDEBAR_HTML = """
   <div id="layer-sidebar-body">
     <div id="layer-list"></div>
   </div>
-</div>
+</div><!-- /layer-sidebar -->
 """
 
 
@@ -132,12 +155,14 @@ def build_sidebar_js(layer_ids: list[str], map_var: str) -> str:
     js_layers = []
     for i, var in enumerate(layer_ids):
         meta = LAYER_META[i]
+        tooltip_fields = meta.get("tooltip_fields", [])
         js_layers.append(
-            "  {{id:{id!r}, label:{label!r}, icon:{icon!r}, op:{op}}}".format(
+            "  {{id:{id!r}, label:{label!r}, icon:{icon!r}, op:{op}, tip:{tip}}}".format(
                 id=var,
                 label=meta["label"],
                 icon=meta["icon"],
                 op=meta["default_opacity"],
+                tip=str(tooltip_fields).replace("'", '"'),
             )
         )
     layers_js = "[\n" + ",\n".join(js_layers) + "\n]"
@@ -274,6 +299,24 @@ def build_sidebar_js(layer_ids: list[str], map_var: str) -> str:
     }});
   }}
 
+  function bindTooltips() {{
+    LAYERS.forEach(function(meta) {{
+      if (!meta.tip || !meta.tip.length) return;
+      var lyr = getLayer(meta.id);
+      if (!lyr || typeof lyr.eachLayer !== 'function') return;
+      lyr.eachLayer(function(l) {{
+        var p = l.feature && l.feature.properties;
+        if (!p) return;
+        var lines = meta.tip
+          .filter(function(f) {{ return p[f] != null && p[f] !== 'None' && p[f] !== ''; }})
+          .map(function(f) {{ return '<b>' + f + ':</b> ' + p[f]; }});
+        if (lines.length) {{
+          l.bindTooltip(lines.join('<br>'), {{ sticky: true, opacity: 0.92 }});
+        }}
+      }});
+    }});
+  }}
+
   function reorderLayers() {{
     var map = getMap();
     if (!map) return;
@@ -304,6 +347,7 @@ def build_sidebar_js(layer_ids: list[str], map_var: str) -> str:
   function init() {{
     if (!getMap()) {{ setTimeout(init, 200); return; }}
     buildSidebar();
+    bindTooltips();
     reorderLayers();
   }}
 
@@ -316,14 +360,27 @@ def build_sidebar_js(layer_ids: list[str], map_var: str) -> str:
 
 
 def inject_sidebar(html: str) -> str:
-    # 1. Find the map variable name
+    # 1. Remove the old inline "Data Layers" control panel generated by the harmonizer.
+    # The new sidebar replaces it; strip it every time so re-runs stay clean.
+    html = _remove_element(html, '<div style="position:fixed; top:80px; right:10px;')
+
+    # 2. Strip Folium's layer-level bindTooltip calls (generic label-only tooltips).
+    # These conflict with the per-feature tooltips bound by bindTooltips() below.
+    html = re.sub(
+        r'\s+geo_json_[a-f0-9]+\.bindTooltip\(\s*`<div>.*?</div>`.*?\);',
+        '',
+        html,
+        flags=re.DOTALL,
+    )
+
+    # 3. Find the map variable name
     map_match = re.search(r'var (map_[a-f0-9]+) = L\.map\(', html)
     if not map_match:
         raise RuntimeError("Could not find Leaflet map variable in HTML")
     map_var = map_match.group(1)
     print(f"  Map variable: {map_var}")
 
-    # 2. Get ALL layer vars in addTo order (skip tile_layer which is the base)
+    # 4. Get ALL layer vars in addTo order (skip tile_layer which is the base)
     all_adds = re.findall(
         rf'((?:geo_json|image_overlay|tile_layer)_[a-f0-9]+)\.addTo\({re.escape(map_var)}\)',
         html,
@@ -334,21 +391,20 @@ def inject_sidebar(html: str) -> str:
 
     if len(layer_ids) != len(LAYER_META):
         print(f"  WARNING: layer count mismatch — found {len(layer_ids)}, expected {len(LAYER_META)}")
-        # Use however many we can match
         n = min(len(layer_ids), len(LAYER_META))
         layer_ids = layer_ids[:n]
 
     for i, var in enumerate(layer_ids):
         print(f"    {i:2d}. {var[:50]}  →  {LAYER_META[i]['label']}")
 
-    # 3. Inject CSS into <head>
+    # 5. Inject CSS into <head>
     css_block = f"<style>\n{SIDEBAR_CSS}\n</style>\n"
     html = html.replace("</head>", css_block + "</head>", 1)
 
-    # 4. Inject sidebar HTML div before </body>
+    # 6. Inject sidebar HTML div before </body>
     html = html.replace("</body>", SIDEBAR_HTML + "\n</body>", 1)
 
-    # 5. Inject sidebar JS at the VERY END of the file.
+    # 7. Inject sidebar JS at the VERY END of the file.
     # IMPORTANT: Folium places its large data <script> blocks AFTER </body>.
     # If we inject before </body>, our init() runs before those scripts execute
     # and window[layerVar] is still undefined. Appending to the end of the file
@@ -359,17 +415,71 @@ def inject_sidebar(html: str) -> str:
     return html
 
 
+def _remove_element(html: str, tag_prefix: str) -> str:
+    """Remove all <div ...>...</div> whose opening tag starts with tag_prefix, depth-aware."""
+    result = html
+    while True:
+        idx = result.find(tag_prefix)
+        if idx == -1:
+            break
+        tag_end = result.find('>', idx)
+        if tag_end == -1:
+            break
+        pos = tag_end + 1
+        depth = 1
+        while pos < len(result) and depth > 0:
+            open_pos = result.find('<div', pos)
+            close_pos = result.find('</div>', pos)
+            if close_pos == -1:
+                break
+            if open_pos != -1 and open_pos < close_pos:
+                depth += 1
+                pos = open_pos + 4
+            else:
+                depth -= 1
+                if depth == 0:
+                    end_pos = close_pos + 6
+                    trim_start = idx
+                    while trim_start > 0 and result[trim_start - 1] in ' \t\r\n':
+                        trim_start -= 1
+                    result = result[:trim_start] + result[end_pos:]
+                    break
+                pos = close_pos + 6
+    return result
+
+
+def _remove_div_by_id(html: str, div_id: str) -> str:
+    """Remove all <div id="div_id">...</div> occurrences, correctly handling nested divs."""
+    return _remove_element(html, f'<div id="{div_id}">')
+
+
 def strip_old_injection(html: str) -> str:
     """Remove a previous sidebar injection so we don't double-inject."""
-    # Remove injected CSS block
+    # 1. Remove injected CSS block
     html = re.sub(r'<style>\s*/\* ── Sidebar styles.*?</style>\s*', '', html, flags=re.DOTALL)
-    # Remove sidebar div (inside </body>)
-    html = re.sub(r'\s*<div id="layer-sidebar">.*?</div>\s*(?=</body>)', '', html, flags=re.DOTALL)
-    # Remove sidebar JS — may be before </body> (old) or at end of file (new)
+
+    # 2. Remove sidebar div — new format (sentinel comment at end)
+    html = re.sub(r'\s*<div id="layer-sidebar">.*?</div><!-- /layer-sidebar -->\s*', '', html, flags=re.DOTALL)
+
+    # 3. Remove sidebar div — old format (no sentinel); use depth-aware removal
+    html = _remove_div_by_id(html, 'layer-sidebar')
+
+    # 4. Remove any orphaned layer-sidebar-body / layer-list fragments left by bad prior strips
+    html = _remove_div_by_id(html, 'layer-sidebar-body')
+    html = _remove_div_by_id(html, 'layer-list')
+
+    # 5. Remove sidebar JS — new format
     html = re.sub(
         r'\s*<script>\s*/\* ── Layer Sidebar \(injected.*?</script>\s*',
         '', html, flags=re.DOTALL,
     )
+
+    # 6. Remove sidebar JS — old format (uses var _mapVar)
+    html = re.sub(
+        r'\s*<script>\s*\(function\(\)\s*\{[\s\S]*?var _mapVar\s*=[\s\S]*?</script>\s*',
+        '', html, flags=re.DOTALL,
+    )
+
     return html
 
 
