@@ -1,12 +1,12 @@
 # Generated data files — large, reproducible, not for version control.
 # Covers output/ inside any project folder (examples/*, workflows/*).
-**/output/*.tif
-**/output/*.tiff
-**/output/*.nc
-**/output/*.zip
-**/output/*.geojson
-**/output/*.json
-**/output/*.img
+# **/output/*.tif
+# **/output/*.tiff
+# **/output/*.nc
+# **/output/*.zip
+# **/output/*.geojson
+# **/output/*.json
+# **/output/*.img
 
 # Keep generated visualizations — these are the shareable artifacts
 !**/output/*.png
