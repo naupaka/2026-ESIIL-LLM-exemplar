@@ -121,6 +121,32 @@ SIDEBAR_CSS = """
     cursor: pointer;
 }
 #layer-sidebar-body { padding: 4px 0 6px; }
+#basemap-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px 8px;
+    border-bottom: 1px solid #eee;
+    font-size: 11px;
+    color: #666;
+    background: #fafafa;
+}
+#basemap-row .basemap-label { flex-grow: 1; font-weight: 500; }
+.basemap-btn {
+    flex-shrink: 0;
+    padding: 3px 8px;
+    border: 1px solid #ccc;
+    background: #fff;
+    border-radius: 3px;
+    font-size: 11px;
+    cursor: pointer;
+    color: #333;
+}
+.basemap-btn.active {
+    background: #2980b9;
+    color: #fff;
+    border-color: #2471a3;
+}
 .layer-item {
     padding: 5px 10px 5px 6px;
     border-bottom: 1px solid #f0f0f0;
@@ -187,13 +213,32 @@ SIDEBAR_HTML = """
     <span class="toggle-icon" id="sidebar-toggle-icon">&#9650;</span>
   </div>
   <div id="layer-sidebar-body">
+    <div id="basemap-row">
+      <span class="basemap-label">Basemap</span>
+      <button type="button" class="basemap-btn active" data-basemap="light">Light</button>
+      <button type="button" class="basemap-btn" data-basemap="sat">Satellite</button>
+    </div>
     <div id="layer-list"></div>
   </div>
 </div><!-- /layer-sidebar -->
 """
 
 
-def build_sidebar_js(layer_ids: list[str], map_var: str) -> str:
+def find_positron_tile_var(html: str) -> str | None:
+    """Find the JS var name of Folium's Positron base tile layer.
+
+    The harmonizer emits exactly one CartoDB Positron L.tileLayer call; we
+    grab its variable so the sidebar can hide/show it when the user picks
+    the satellite basemap instead.
+    """
+    m = re.search(
+        r"(tile_layer_[a-f0-9]+)\s*=\s*L\.tileLayer\(\s*\"https://\{s\}\.basemaps\.cartocdn\.com/light_all",
+        html,
+    )
+    return m.group(1) if m else None
+
+
+def build_sidebar_js(layer_ids: list[str], map_var: str, positron_var: str | None = None) -> str:
     """Build the sidebar JS, embedding the actual layer variable names from this HTML."""
     js_layers = []
     for i, var in enumerate(layer_ids):
@@ -210,11 +255,13 @@ def build_sidebar_js(layer_ids: list[str], map_var: str) -> str:
         )
     layers_js = "[\n" + ",\n".join(js_layers) + "\n]"
 
+    positron_js = f'"{positron_var}"' if positron_var else "null"
     return f"""
 <script>
 /* ── Layer Sidebar (injected by inject_sidebar.py) ── */
 (function() {{
   var MAP_VAR = "{map_var}";
+  var POSITRON_VAR = {positron_js};
   var LAYERS  = {layers_js};
   var dragSrcEl = null;
 
@@ -424,10 +471,55 @@ def build_sidebar_js(layer_ids: list[str], map_var: str) -> str:
   // Because this script is placed AFTER all Folium data scripts at the end of
   // the HTML file, all layer globals are already defined by the time we run.
   // We still defer with setTimeout to let the browser finish layout.
+  // Esri World Imagery — created lazily on first switch to satellite.
+  var satLayer = null;
+  function getSatLayer() {{
+    if (!satLayer) {{
+      satLayer = L.tileLayer(
+        "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{{z}}/{{y}}/{{x}}",
+        {{
+          attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community',
+          maxZoom: 19,
+        }}
+      );
+    }}
+    return satLayer;
+  }}
+
+  function setBasemap(which) {{
+    var map = getMap();
+    if (!map) return;
+    var positron = POSITRON_VAR ? window[POSITRON_VAR] : null;
+    var sat = getSatLayer();
+    if (which === 'sat') {{
+      if (positron && map.hasLayer(positron)) map.removeLayer(positron);
+      if (!map.hasLayer(sat)) sat.addTo(map);
+    }} else {{
+      if (map.hasLayer(sat)) map.removeLayer(sat);
+      if (positron && !map.hasLayer(positron)) positron.addTo(map);
+    }}
+    // Keep base map at the bottom of the stack.
+    if (positron && positron.bringToBack) positron.bringToBack();
+    if (sat.bringToBack) sat.bringToBack();
+    // Toggle button active state.
+    document.querySelectorAll('.basemap-btn').forEach(function(btn) {{
+      btn.classList.toggle('active', btn.dataset.basemap === which);
+    }});
+  }}
+
+  function wireBasemapButtons() {{
+    document.querySelectorAll('.basemap-btn').forEach(function(btn) {{
+      btn.addEventListener('click', function() {{
+        setBasemap(this.dataset.basemap);
+      }});
+    }});
+  }}
+
   function init() {{
     if (!getMap()) {{ setTimeout(init, 200); return; }}
     buildSidebar();
     bindTooltips();
+    wireBasemapButtons();
     // No reorderLayers() on init — Folium's addTo order is already correct,
     // and bringToFront() on dense vector layers (NHD flowlines, HUC-12) is
     // slow enough to trigger the browser's slow-script dialog.
@@ -491,7 +583,12 @@ def inject_sidebar(html: str) -> str:
     # If we inject before </body>, our init() runs before those scripts execute
     # and window[layerVar] is still undefined. Appending to the end of the file
     # guarantees all layer globals exist when our code runs.
-    sidebar_js = build_sidebar_js(layer_ids, map_var)
+    positron_var = find_positron_tile_var(html)
+    if positron_var:
+        print(f"  Positron base layer: {positron_var}")
+    else:
+        print("  WARNING: could not find Positron tile var; basemap toggle will skip the light layer")
+    sidebar_js = build_sidebar_js(layer_ids, map_var, positron_var)
     html = html.rstrip() + "\n" + sidebar_js + "\n"
 
     return html
