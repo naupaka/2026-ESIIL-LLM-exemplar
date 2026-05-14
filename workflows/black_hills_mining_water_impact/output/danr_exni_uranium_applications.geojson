@@ -9,64 +9,112 @@
           [
             [
               [
-                -103.0144026600198,
-                43.84405797101449
+                -103.05469725686086,
+                43.91652173913044
               ],
               [
-                -102.99425536159926,
-                43.84405797101449
+                -103.03454995844032,
+                43.91652173913044
               ],
               [
-                -102.99425536159926,
-                43.85855072463768
+                -103.03454995844032,
+                43.931014492753626
               ],
               [
-                -103.0144026600198,
-                43.85855072463768
+                -103.05469725686086,
+                43.931014492753626
               ],
               [
-                -103.0144026600198,
-                43.84405797101449
+                -103.05469725686086,
+                43.91652173913044
               ]
             ]
           ],
           [
             [
               [
-                -103.0144026600198,
-                43.829565217391306
+                -103.05469725686086,
+                43.13391304347826
               ],
               [
-                -102.99425536159926,
-                43.829565217391306
+                -103.03454995844032,
+                43.13391304347826
               ],
               [
-                -102.99425536159926,
-                43.84405797101449
+                -103.03454995844032,
+                43.14840579710145
               ],
               [
-                -103.0144026600198,
-                43.84405797101449
+                -103.05469725686086,
+                43.14840579710145
               ],
               [
-                -103.0144026600198,
-                43.829565217391306
+                -103.05469725686086,
+                43.13391304347826
               ]
             ]
           ]
         ]
       },
       "properties": {
-        "name": "Daniel Hoff EXNI",
-        "type": "EXNI",
-        "applicant": "Daniel Hoff",
+        "name": "HoffEXNI",
+        "type": "Uranium Exploration Permit",
+        "applicant": "EXNI Application NOTE: In compliance with SDCL 45-6C-14, maps and other information submitted with the application that ",
         "county": "Pennington",
-        "status": "Filed",
-        "note": "Test hole locations confidential per SDCL 45-6C-14",
+        "status": "Unknown",
         "source_pdf": "HoffEXNI.pdf",
+        "source_url": "https://danr.sd.gov/Environment/MineralsMining/Exploration/docs/HoffEXNI.pdf",
+        "extraction_method": "ocr",
         "sections_count": 2,
-        "centroid_lon": -103.00433,
-        "centroid_lat": 43.8513
+        "geometry_source": "plss_section",
+        "approximate_location": false,
+        "centroid_lon": -103.04462,
+        "centroid_lat": 43.92377
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -102.90073649210265,
+              43.927536231884055
+            ],
+            [
+              -102.69926350789734,
+              43.927536231884055
+            ],
+            [
+              -102.69926350789734,
+              44.072463768115945
+            ],
+            [
+              -102.90073649210265,
+              44.072463768115945
+            ],
+            [
+              -102.90073649210265,
+              43.927536231884055
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "name": "HoffEXNICorrespondence",
+        "type": "EXNI",
+        "applicant": "DENR Notification to the Department of Game, Fish, & Parks, the Archaeological Research Center, and the Pennington Count",
+        "county": "Pennington",
+        "status": "Unknown",
+        "source_pdf": "HoffEXNICorrespondence.pdf",
+        "source_url": "https://danr.sd.gov/Environment/MineralsMining/Exploration/docs/HoffEXNICorrespondence.pdf",
+        "extraction_method": "pdfplumber",
+        "sections_count": 0,
+        "geometry_source": "county_fallback",
+        "approximate_location": true,
+        "centroid_lon": -102.8,
+        "centroid_lat": 44.0
       }
     },
     {
@@ -77,24 +125,264 @@
           [
             [
               [
-                -103.35690673316884,
-                43.988985507246376
+                -103.29646483790724,
+                44.07594202898551
               ],
               [
-                -103.3367594347483,
-                43.988985507246376
+                -103.2763175394867,
+                44.07594202898551
               ],
               [
-                -103.3367594347483,
-                44.003478260869564
+                -103.2763175394867,
+                44.090434782608696
               ],
               [
-                -103.35690673316884,
-                44.003478260869564
+                -103.29646483790724,
+                44.090434782608696
               ],
               [
-                -103.35690673316884,
-                43.988985507246376
+                -103.29646483790724,
+                44.07594202898551
+              ]
+            ]
+          ],
+          [
+            [
+              [
+                -103.29646483790724,
+                44.061449275362314
+              ],
+              [
+                -103.2763175394867,
+                44.061449275362314
+              ],
+              [
+                -103.2763175394867,
+                44.0759420289855
+              ],
+              [
+                -103.29646483790724,
+                44.0759420289855
+              ],
+              [
+                -103.29646483790724,
+                44.061449275362314
+              ]
+            ]
+          ],
+          [
+            [
+              [
+                -103.29646483790724,
+                44.046956521739126
+              ],
+              [
+                -103.2763175394867,
+                44.046956521739126
+              ],
+              [
+                -103.2763175394867,
+                44.061449275362314
+              ],
+              [
+                -103.29646483790724,
+                44.061449275362314
+              ],
+              [
+                -103.29646483790724,
+                44.046956521739126
+              ]
+            ]
+          ],
+          [
+            [
+              [
+                -103.19572834580458,
+                44.090434782608696
+              ],
+              [
+                -103.17558104738404,
+                44.090434782608696
+              ],
+              [
+                -103.17558104738404,
+                44.104927536231884
+              ],
+              [
+                -103.19572834580458,
+                44.104927536231884
+              ],
+              [
+                -103.19572834580458,
+                44.090434782608696
+              ]
+            ]
+          ],
+          [
+            [
+              [
+                -103.21587564422512,
+                44.090434782608696
+              ],
+              [
+                -103.19572834580458,
+                44.090434782608696
+              ],
+              [
+                -103.19572834580458,
+                44.104927536231884
+              ],
+              [
+                -103.21587564422512,
+                44.104927536231884
+              ],
+              [
+                -103.21587564422512,
+                44.090434782608696
+              ]
+            ]
+          ],
+          [
+            [
+              [
+                -103.19572834580458,
+                44.07594202898551
+              ],
+              [
+                -103.17558104738404,
+                44.07594202898551
+              ],
+              [
+                -103.17558104738404,
+                44.090434782608696
+              ],
+              [
+                -103.19572834580458,
+                44.090434782608696
+              ],
+              [
+                -103.19572834580458,
+                44.07594202898551
+              ]
+            ]
+          ],
+          [
+            [
+              [
+                -103.19572834580458,
+                44.061449275362314
+              ],
+              [
+                -103.17558104738404,
+                44.061449275362314
+              ],
+              [
+                -103.17558104738404,
+                44.0759420289855
+              ],
+              [
+                -103.19572834580458,
+                44.0759420289855
+              ],
+              [
+                -103.19572834580458,
+                44.061449275362314
+              ]
+            ]
+          ],
+          [
+            [
+              [
+                -103.41734862843043,
+                44.07594202898551
+              ],
+              [
+                -103.39720133000989,
+                44.07594202898551
+              ],
+              [
+                -103.39720133000989,
+                44.090434782608696
+              ],
+              [
+                -103.41734862843043,
+                44.090434782608696
+              ],
+              [
+                -103.41734862843043,
+                44.07594202898551
+              ]
+            ]
+          ],
+          [
+            [
+              [
+                -103.41734862843043,
+                44.061449275362314
+              ],
+              [
+                -103.39720133000989,
+                44.061449275362314
+              ],
+              [
+                -103.39720133000989,
+                44.0759420289855
+              ],
+              [
+                -103.41734862843043,
+                44.0759420289855
+              ],
+              [
+                -103.41734862843043,
+                44.061449275362314
+              ]
+            ]
+          ],
+          [
+            [
+              [
+                -103.41734862843043,
+                44.046956521739126
+              ],
+              [
+                -103.39720133000989,
+                44.046956521739126
+              ],
+              [
+                -103.39720133000989,
+                44.061449275362314
+              ],
+              [
+                -103.41734862843043,
+                44.061449275362314
+              ],
+              [
+                -103.41734862843043,
+                44.046956521739126
+              ]
+            ]
+          ],
+          [
+            [
+              [
+                -103.31661213632778,
+                44.090434782608696
+              ],
+              [
+                -103.29646483790724,
+                44.090434782608696
+              ],
+              [
+                -103.29646483790724,
+                44.104927536231884
+              ],
+              [
+                -103.31661213632778,
+                44.104927536231884
+              ],
+              [
+                -103.31661213632778,
+                44.090434782608696
               ]
             ]
           ],
@@ -102,63 +390,230 @@
             [
               [
                 -103.33675943474832,
-                43.988985507246376
+                44.090434782608696
               ],
               [
                 -103.31661213632778,
-                43.988985507246376
+                44.090434782608696
               ],
               [
                 -103.31661213632778,
-                44.003478260869564
+                44.104927536231884
               ],
               [
                 -103.33675943474832,
-                44.003478260869564
+                44.104927536231884
               ],
               [
                 -103.33675943474832,
-                43.988985507246376
+                44.090434782608696
               ]
             ]
           ],
           [
             [
               [
-                -103.35690673316884,
-                43.97449275362318
+                -103.31661213632778,
+                44.07594202898551
               ],
               [
-                -103.3367594347483,
-                43.97449275362318
+                -103.29646483790724,
+                44.07594202898551
               ],
               [
-                -103.3367594347483,
-                43.98898550724637
+                -103.29646483790724,
+                44.090434782608696
               ],
               [
-                -103.35690673316884,
-                43.98898550724637
+                -103.31661213632778,
+                44.090434782608696
               ],
               [
-                -103.35690673316884,
-                43.97449275362318
+                -103.31661213632778,
+                44.07594202898551
+              ]
+            ]
+          ],
+          [
+            [
+              [
+                -103.31661213632778,
+                44.061449275362314
+              ],
+              [
+                -103.29646483790724,
+                44.061449275362314
+              ],
+              [
+                -103.29646483790724,
+                44.0759420289855
+              ],
+              [
+                -103.31661213632778,
+                44.0759420289855
+              ],
+              [
+                -103.31661213632778,
+                44.061449275362314
               ]
             ]
           ]
         ]
       },
       "properties": {
-        "name": "F3 Gold LLC EXNI",
-        "type": "EXNI",
-        "applicant": "F3 Gold LLC",
+        "name": "F3GoldEXNIApp",
+        "type": "Uranium Exploration Permit",
+        "applicant": "EXNI Application NOTE: In compliance with SDCL 45-6C-14, maps and other information submitted with the application that ",
         "county": "Pennington",
-        "status": "Filed",
-        "note": "Test hole locations confidential per SDCL 45-6C-14. Map of exploration area without test holes is public.",
+        "status": "Unknown",
         "source_pdf": "F3GoldEXNIApp.pdf",
+        "source_url": "https://danr.sd.gov/Environment/MineralsMining/Exploration/docs/F3GoldEXNIApp.pdf",
+        "extraction_method": "ocr",
+        "sections_count": 14,
+        "geometry_source": "plss_section",
+        "approximate_location": false,
+        "centroid_lon": -103.28639,
+        "centroid_lat": 44.08319
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -102.90073649210265,
+              43.927536231884055
+            ],
+            [
+              -102.69926350789734,
+              43.927536231884055
+            ],
+            [
+              -102.69926350789734,
+              44.072463768115945
+            ],
+            [
+              -102.90073649210265,
+              44.072463768115945
+            ],
+            [
+              -102.90073649210265,
+              43.927536231884055
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "name": "F3GoldEXNIMapPublic",
+        "type": "EXNI",
+        "applicant": "Map of Exploration Area Without Test Hole Locations",
+        "county": "Pennington",
+        "status": "Unknown",
+        "source_pdf": "F3GoldEXNIMapPublic.pdf",
+        "source_url": "https://danr.sd.gov/Environment/MineralsMining/Exploration/docs/F3GoldEXNIMapPublic.pdf",
+        "extraction_method": "pdfplumber",
+        "sections_count": 0,
+        "geometry_source": "county_fallback",
+        "approximate_location": true,
+        "centroid_lon": -102.8,
+        "centroid_lat": 44.0
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "MultiPolygon",
+        "coordinates": [
+          [
+            [
+              [
+                -103.19572834580458,
+                44.090434782608696
+              ],
+              [
+                -103.17558104738404,
+                44.090434782608696
+              ],
+              [
+                -103.17558104738404,
+                44.104927536231884
+              ],
+              [
+                -103.19572834580458,
+                44.104927536231884
+              ],
+              [
+                -103.19572834580458,
+                44.090434782608696
+              ]
+            ]
+          ],
+          [
+            [
+              [
+                -103.21587564422512,
+                44.090434782608696
+              ],
+              [
+                -103.19572834580458,
+                44.090434782608696
+              ],
+              [
+                -103.19572834580458,
+                44.104927536231884
+              ],
+              [
+                -103.21587564422512,
+                44.104927536231884
+              ],
+              [
+                -103.21587564422512,
+                44.090434782608696
+              ]
+            ]
+          ],
+          [
+            [
+              [
+                -103.19572834580458,
+                44.07594202898551
+              ],
+              [
+                -103.17558104738404,
+                44.07594202898551
+              ],
+              [
+                -103.17558104738404,
+                44.090434782608696
+              ],
+              [
+                -103.19572834580458,
+                44.090434782608696
+              ],
+              [
+                -103.19572834580458,
+                44.07594202898551
+              ]
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "name": "F3GoldEXNINOF",
+        "type": "EXNI",
+        "applicant": "Notice of Filing of EXNI Application",
+        "county": "Pennington",
+        "status": "Unknown",
+        "source_pdf": "F3GoldEXNINOF.pdf",
+        "source_url": "https://danr.sd.gov/Environment/MineralsMining/Exploration/docs/F3GoldEXNINOF.pdf",
+        "extraction_method": "pdfplumber",
         "sections_count": 3,
-        "centroid_lon": -103.34683,
-        "centroid_lat": 43.99623
+        "geometry_source": "plss_section",
+        "approximate_location": false,
+        "centroid_lon": -103.18565,
+        "centroid_lat": 44.09768
       }
     },
     {
@@ -191,14 +646,1353 @@
         ]
       },
       "properties": {
-        "name": "Clean Nuclear Energy - Chord Project (Uranium)",
+        "name": "EXNI453App2",
         "type": "Uranium Exploration Permit",
-        "applicant": "Clean Nuclear Energy Corp.",
+        "applicant": "Uranium Exploration Permit Application NOTE: In compliance with SDCL 45-6D-15, maps submitted with the application that ",
         "county": "Fall River",
-        "status": "Contested Case Hearing Pending",
-        "note": "Section 36, Township 7 S, Range 2 E, Black Hills Meridian. Test hole locations confidential per SDCL 45-6D-15.",
+        "status": "Unknown",
         "source_pdf": "EXNI453App2.pdf",
+        "source_url": "https://danr.sd.gov/Environment/MineralsMining/Exploration/docs/EXNI453App2.pdf",
+        "extraction_method": "pdfplumber",
         "sections_count": 1,
+        "geometry_source": "plss_section",
+        "approximate_location": false,
+        "centroid_lon": -103.54831,
+        "centroid_lat": 43.35855
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -103.60073649210266,
+              43.177536231884055
+            ],
+            [
+              -103.39926350789734,
+              43.177536231884055
+            ],
+            [
+              -103.39926350789734,
+              43.322463768115945
+            ],
+            [
+              -103.60073649210266,
+              43.322463768115945
+            ],
+            [
+              -103.60073649210266,
+              43.177536231884055
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "name": "EXNI453AgencyNotification",
+        "type": "Uranium Exploration Permit",
+        "applicant": "DANR Notification to the Department of Game, Fish, & Parks, Archaeological Research Center, and State Historical Preserv",
+        "county": "Fall River",
+        "status": "Unknown",
+        "source_pdf": "EXNI453AgencyNotification.pdf",
+        "source_url": "https://danr.sd.gov/Environment/MineralsMining/Exploration/docs/EXNI453AgencyNotification.pdf",
+        "extraction_method": "pdfplumber",
+        "sections_count": 0,
+        "geometry_source": "county_fallback",
+        "approximate_location": true,
+        "centroid_lon": -103.5,
+        "centroid_lat": 43.25
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -103.60073649210266,
+              43.177536231884055
+            ],
+            [
+              -103.39926350789734,
+              43.177536231884055
+            ],
+            [
+              -103.39926350789734,
+              43.322463768115945
+            ],
+            [
+              -103.60073649210266,
+              43.322463768115945
+            ],
+            [
+              -103.60073649210266,
+              43.177536231884055
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "name": "EXNI453PublicComments",
+        "type": "Uranium Exploration Permit",
+        "applicant": "Public Comments on Application received by DANR",
+        "county": "Fall River",
+        "status": "Unknown",
+        "source_pdf": "EXNI453PublicComments.pdf",
+        "source_url": "https://danr.sd.gov/Environment/MineralsMining/Exploration/docs/EXNI453PublicComments.pdf",
+        "extraction_method": "pdfplumber",
+        "sections_count": 0,
+        "geometry_source": "county_fallback",
+        "approximate_location": true,
+        "centroid_lon": -103.5,
+        "centroid_lat": 43.25
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -103.60073649210266,
+              43.177536231884055
+            ],
+            [
+              -103.39926350789734,
+              43.177536231884055
+            ],
+            [
+              -103.39926350789734,
+              43.322463768115945
+            ],
+            [
+              -103.60073649210266,
+              43.322463768115945
+            ],
+            [
+              -103.60073649210266,
+              43.177536231884055
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "name": "CleanNuclearEXNI453NoticeofHearing",
+        "type": "Uranium Exploration Permit",
+        "applicant": "Notice of Hearing (NOTE: Hearing postponed per August 5, 2025 Order setting a pre-hearing conference)",
+        "county": "Fall River",
+        "status": "Unknown",
+        "source_pdf": "CleanNuclearEXNI453NoticeofHearing.pdf",
+        "source_url": "https://danr.sd.gov/Environment/MineralsMining/Exploration/docs/CleanNuclearEXNI453NoticeofHearing.pdf",
+        "extraction_method": "pdfplumber",
+        "sections_count": 0,
+        "geometry_source": "county_fallback",
+        "approximate_location": true,
+        "centroid_lon": -103.5,
+        "centroid_lat": 43.25
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -103.60073649210266,
+              44.827536231884054
+            ],
+            [
+              -103.39926350789734,
+              44.827536231884054
+            ],
+            [
+              -103.39926350789734,
+              44.972463768115944
+            ],
+            [
+              -103.60073649210266,
+              44.972463768115944
+            ],
+            [
+              -103.60073649210266,
+              44.827536231884054
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "name": "821GunnNoticeAppearance",
+        "type": "Uranium Exploration Permit",
+        "applicant": "August 21, 2025 Notice of Appearance for Intervenor Cheyenne River Sioux Tribe from Steven Gunn",
+        "county": "Butte",
+        "status": "Unknown",
+        "source_pdf": "821GunnNoticeAppearance.pdf",
+        "source_url": "https://danr.sd.gov/Environment/MineralsMining/Exploration/docs/821GunnNoticeAppearance.pdf",
+        "extraction_method": "ocr",
+        "sections_count": 0,
+        "geometry_source": "county_fallback",
+        "approximate_location": true,
+        "centroid_lon": -103.5,
+        "centroid_lat": 44.9
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "MultiPolygon",
+        "coordinates": [
+          [
+            [
+              [
+                -103.25617024106617,
+                44.322318840579705
+              ],
+              [
+                -103.23602294264563,
+                44.322318840579705
+              ],
+              [
+                -103.23602294264563,
+                44.33681159420289
+              ],
+              [
+                -103.25617024106617,
+                44.33681159420289
+              ],
+              [
+                -103.25617024106617,
+                44.322318840579705
+              ]
+            ]
+          ],
+          [
+            [
+              [
+                -103.15543374896352,
+                44.14840579710145
+              ],
+              [
+                -103.13528645054298,
+                44.14840579710145
+              ],
+              [
+                -103.13528645054298,
+                44.162898550724634
+              ],
+              [
+                -103.15543374896352,
+                44.162898550724634
+              ],
+              [
+                -103.15543374896352,
+                44.14840579710145
+              ]
+            ]
+          ],
+          [
+            [
+              [
+                -103.15543374896352,
+                44.13391304347826
+              ],
+              [
+                -103.13528645054298,
+                44.13391304347826
+              ],
+              [
+                -103.13528645054298,
+                44.14840579710145
+              ],
+              [
+                -103.15543374896352,
+                44.14840579710145
+              ],
+              [
+                -103.15543374896352,
+                44.13391304347826
+              ]
+            ]
+          ],
+          [
+            [
+              [
+                -103.37705403158937,
+                44.046956521739126
+              ],
+              [
+                -103.35690673316883,
+                44.046956521739126
+              ],
+              [
+                -103.35690673316883,
+                44.061449275362314
+              ],
+              [
+                -103.37705403158937,
+                44.061449275362314
+              ],
+              [
+                -103.37705403158937,
+                44.046956521739126
+              ]
+            ]
+          ],
+          [
+            [
+              [
+                -103.07484455528139,
+                44.191884057971016
+              ],
+              [
+                -103.05469725686085,
+                44.191884057971016
+              ],
+              [
+                -103.05469725686085,
+                44.206376811594204
+              ],
+              [
+                -103.07484455528139,
+                44.206376811594204
+              ],
+              [
+                -103.07484455528139,
+                44.191884057971016
+              ]
+            ]
+          ],
+          [
+            [
+              [
+                -103.13528645054298,
+                44.14840579710145
+              ],
+              [
+                -103.11513915212244,
+                44.14840579710145
+              ],
+              [
+                -103.11513915212244,
+                44.162898550724634
+              ],
+              [
+                -103.13528645054298,
+                44.162898550724634
+              ],
+              [
+                -103.13528645054298,
+                44.14840579710145
+              ]
+            ]
+          ],
+          [
+            [
+              [
+                -103.25617024106617,
+                44.264347826086954
+              ],
+              [
+                -103.23602294264563,
+                44.264347826086954
+              ],
+              [
+                -103.23602294264563,
+                44.27884057971014
+              ],
+              [
+                -103.25617024106617,
+                44.27884057971014
+              ],
+              [
+                -103.25617024106617,
+                44.264347826086954
+              ]
+            ]
+          ],
+          [
+            [
+              [
+                -103.21587564422512,
+                44.23536231884057
+              ],
+              [
+                -103.19572834580458,
+                44.23536231884057
+              ],
+              [
+                -103.19572834580458,
+                44.24985507246376
+              ],
+              [
+                -103.21587564422512,
+                44.24985507246376
+              ],
+              [
+                -103.21587564422512,
+                44.23536231884057
+              ]
+            ]
+          ],
+          [
+            [
+              [
+                -103.59867431421522,
+                43.77159420289855
+              ],
+              [
+                -103.57852701579468,
+                43.77159420289855
+              ],
+              [
+                -103.57852701579468,
+                43.786086956521736
+              ],
+              [
+                -103.59867431421522,
+                43.786086956521736
+              ],
+              [
+                -103.59867431421522,
+                43.77159420289855
+              ]
+            ]
+          ],
+          [
+            [
+              [
+                -103.27631753948671,
+                44.322318840579705
+              ],
+              [
+                -103.25617024106617,
+                44.322318840579705
+              ],
+              [
+                -103.25617024106617,
+                44.33681159420289
+              ],
+              [
+                -103.27631753948671,
+                44.33681159420289
+              ],
+              [
+                -103.27631753948671,
+                44.322318840579705
+              ]
+            ]
+          ],
+          [
+            [
+              [
+                -103.63896891105628,
+                43.829565217391306
+              ],
+              [
+                -103.61882161263574,
+                43.829565217391306
+              ],
+              [
+                -103.61882161263574,
+                43.84405797101449
+              ],
+              [
+                -103.63896891105628,
+                43.84405797101449
+              ],
+              [
+                -103.63896891105628,
+                43.829565217391306
+              ]
+            ]
+          ],
+          [
+            [
+              [
+                -103.19572834580458,
+                44.27884057971014
+              ],
+              [
+                -103.17558104738404,
+                44.27884057971014
+              ],
+              [
+                -103.17558104738404,
+                44.29333333333333
+              ],
+              [
+                -103.19572834580458,
+                44.29333333333333
+              ],
+              [
+                -103.19572834580458,
+                44.27884057971014
+              ]
+            ]
+          ],
+          [
+            [
+              [
+                -103.61882161263574,
+                43.829565217391306
+              ],
+              [
+                -103.5986743142152,
+                43.829565217391306
+              ],
+              [
+                -103.5986743142152,
+                43.84405797101449
+              ],
+              [
+                -103.61882161263574,
+                43.84405797101449
+              ],
+              [
+                -103.61882161263574,
+                43.829565217391306
+              ]
+            ]
+          ],
+          [
+            [
+              [
+                -103.29646483790724,
+                44.17739130434783
+              ],
+              [
+                -103.2763175394867,
+                44.17739130434783
+              ],
+              [
+                -103.2763175394867,
+                44.191884057971016
+              ],
+              [
+                -103.29646483790724,
+                44.191884057971016
+              ],
+              [
+                -103.29646483790724,
+                44.17739130434783
+              ]
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "name": "120125EXNI453GPTWaterAllianceWitnessExhibits",
+        "type": "Uranium Exploration Permit",
+        "applicant": "December 1, 2025 Witness and Hearing Exhibits Disclosure by Great Plains Tribal Water Alliance",
+        "county": "Fall River",
+        "status": "Unknown",
+        "source_pdf": "120125EXNI453GPTWaterAllianceWitnessExhibits.pdf",
+        "source_url": "https://danr.sd.gov/Environment/MineralsMining/Exploration/docs/120125EXNI453GPTWaterAllianceWitnessExhibits.pdf",
+        "extraction_method": "pdfplumber",
+        "sections_count": 14,
+        "geometry_source": "plss_section",
+        "approximate_location": false,
+        "centroid_lon": -103.2461,
+        "centroid_lat": 44.32957
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -103.60073649210266,
+              43.177536231884055
+            ],
+            [
+              -103.39926350789734,
+              43.177536231884055
+            ],
+            [
+              -103.39926350789734,
+              43.322463768115945
+            ],
+            [
+              -103.60073649210266,
+              43.322463768115945
+            ],
+            [
+              -103.60073649210266,
+              43.177536231884055
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "name": "012726OglalaLakotaHearingLocationAppeal",
+        "type": "Uranium Exploration Permit",
+        "applicant": "January 27, 2026 Request from Oglala Lakota County Commission to Appeal Venue of Hearing on Clean Nuclear Energy's Urani",
+        "county": "Fall River",
+        "status": "Unknown",
+        "source_pdf": "012726OglalaLakotaHearingLocationAppeal.pdf",
+        "source_url": "https://danr.sd.gov/Environment/MineralsMining/Exploration/docs/012726OglalaLakotaHearingLocationAppeal.pdf",
+        "extraction_method": "ocr",
+        "sections_count": 0,
+        "geometry_source": "county_fallback",
+        "approximate_location": true,
+        "centroid_lon": -103.5,
+        "centroid_lat": 43.25
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -103.60073649210266,
+              43.177536231884055
+            ],
+            [
+              -103.39926350789734,
+              43.177536231884055
+            ],
+            [
+              -103.39926350789734,
+              43.322463768115945
+            ],
+            [
+              -103.60073649210266,
+              43.322463768115945
+            ],
+            [
+              -103.60073649210266,
+              43.177536231884055
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "name": "EXNI453MotionforReconsideration",
+        "type": "Uranium Exploration Permit",
+        "applicant": "February 2, 2026 Motion from Great Plains Tribal Water Alliance to Board of Minerals and Environment Requesting Reconsid",
+        "county": "Fall River",
+        "status": "Unknown",
+        "source_pdf": "EXNI453MotionforReconsideration.pdf",
+        "source_url": "https://danr.sd.gov/Environment/MineralsMining/Exploration/docs/EXNI453MotionforReconsideration.pdf",
+        "extraction_method": "pdfplumber",
+        "sections_count": 0,
+        "geometry_source": "county_fallback",
+        "approximate_location": true,
+        "centroid_lon": -103.5,
+        "centroid_lat": 43.25
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -101.70073649210265,
+              43.62753623188406
+            ],
+            [
+              -101.49926350789734,
+              43.62753623188406
+            ],
+            [
+              -101.49926350789734,
+              43.77246376811595
+            ],
+            [
+              -101.70073649210265,
+              43.77246376811595
+            ],
+            [
+              -101.70073649210265,
+              43.62753623188406
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "name": "021726CNECResponseHearingDateAppeal",
+        "type": "Uranium Exploration Permit",
+        "applicant": "February 17, 2026 Response from Clean Nuclear Energy to Intervenors Joint Appeal on Hearing Dates",
+        "county": "Jackson",
+        "status": "Unknown",
+        "source_pdf": "021726CNECResponseHearingDateAppeal.pdf",
+        "source_url": "https://danr.sd.gov/Environment/MineralsMining/Exploration/docs/021726CNECResponseHearingDateAppeal.pdf",
+        "extraction_method": "ocr",
+        "sections_count": 0,
+        "geometry_source": "county_fallback",
+        "approximate_location": true,
+        "centroid_lon": -101.6,
+        "centroid_lat": 43.7
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -103.60073649210266,
+              43.177536231884055
+            ],
+            [
+              -103.39926350789734,
+              43.177536231884055
+            ],
+            [
+              -103.39926350789734,
+              43.322463768115945
+            ],
+            [
+              -103.60073649210266,
+              43.322463768115945
+            ],
+            [
+              -103.60073649210266,
+              43.177536231884055
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "name": "CleanNuclearEXNI453NoticeofHearing2026b",
+        "type": "Uranium Exploration Permit",
+        "applicant": "Notice of Hearing to be Published in Fall River County Herald Star and Rapid City Journal",
+        "county": "Fall River",
+        "status": "Unknown",
+        "source_pdf": "CleanNuclearEXNI453NoticeofHearing2026b.pdf",
+        "source_url": "https://danr.sd.gov/Environment/MineralsMining/Exploration/docs/CleanNuclearEXNI453NoticeofHearing2026b.pdf",
+        "extraction_method": "pdfplumber",
+        "sections_count": 0,
+        "geometry_source": "county_fallback",
+        "approximate_location": true,
+        "centroid_lon": -103.5,
+        "centroid_lat": 43.25
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "MultiPolygon",
+        "coordinates": [
+          [
+            [
+              [
+                -103.55837971737415,
+                43.36579710144927
+              ],
+              [
+                -103.53823241895361,
+                43.36579710144927
+              ],
+              [
+                -103.53823241895361,
+                43.380289855072455
+              ],
+              [
+                -103.55837971737415,
+                43.380289855072455
+              ],
+              [
+                -103.55837971737415,
+                43.36579710144927
+              ]
+            ]
+          ],
+          [
+            [
+              [
+                -103.6591162094768,
+                43.36579710144927
+              ],
+              [
+                -103.63896891105627,
+                43.36579710144927
+              ],
+              [
+                -103.63896891105627,
+                43.380289855072455
+              ],
+              [
+                -103.6591162094768,
+                43.380289855072455
+              ],
+              [
+                -103.6591162094768,
+                43.36579710144927
+              ]
+            ]
+          ],
+          [
+            [
+              [
+                -103.55837971737415,
+                43.35130434782608
+              ],
+              [
+                -103.53823241895361,
+                43.35130434782608
+              ],
+              [
+                -103.53823241895361,
+                43.36579710144927
+              ],
+              [
+                -103.55837971737415,
+                43.36579710144927
+              ],
+              [
+                -103.55837971737415,
+                43.35130434782608
+              ]
+            ]
+          ],
+          [
+            [
+              [
+                -103.57852701579469,
+                43.35130434782608
+              ],
+              [
+                -103.55837971737415,
+                43.35130434782608
+              ],
+              [
+                -103.55837971737415,
+                43.36579710144927
+              ],
+              [
+                -103.57852701579469,
+                43.36579710144927
+              ],
+              [
+                -103.57852701579469,
+                43.35130434782608
+              ]
+            ]
+          ],
+          [
+            [
+              [
+                -103.57852701579469,
+                43.3368115942029
+              ],
+              [
+                -103.55837971737415,
+                43.3368115942029
+              ],
+              [
+                -103.55837971737415,
+                43.35130434782609
+              ],
+              [
+                -103.57852701579469,
+                43.35130434782609
+              ],
+              [
+                -103.57852701579469,
+                43.3368115942029
+              ]
+            ]
+          ],
+          [
+            [
+              [
+                -103.59867431421522,
+                43.3368115942029
+              ],
+              [
+                -103.57852701579468,
+                43.3368115942029
+              ],
+              [
+                -103.57852701579468,
+                43.35130434782609
+              ],
+              [
+                -103.59867431421522,
+                43.35130434782609
+              ],
+              [
+                -103.59867431421522,
+                43.3368115942029
+              ]
+            ]
+          ],
+          [
+            [
+              [
+                -103.55837971737415,
+                43.39478260869565
+              ],
+              [
+                -103.53823241895361,
+                43.39478260869565
+              ],
+              [
+                -103.53823241895361,
+                43.40927536231884
+              ],
+              [
+                -103.55837971737415,
+                43.40927536231884
+              ],
+              [
+                -103.55837971737415,
+                43.39478260869565
+              ]
+            ]
+          ],
+          [
+            [
+              [
+                -103.51808512053309,
+                43.38028985507246
+              ],
+              [
+                -103.49793782211255,
+                43.38028985507246
+              ],
+              [
+                -103.49793782211255,
+                43.39478260869565
+              ],
+              [
+                -103.51808512053309,
+                43.39478260869565
+              ],
+              [
+                -103.51808512053309,
+                43.38028985507246
+              ]
+            ]
+          ],
+          [
+            [
+              [
+                -103.51808512053309,
+                43.307826086956524
+              ],
+              [
+                -103.49793782211255,
+                43.307826086956524
+              ],
+              [
+                -103.49793782211255,
+                43.32231884057971
+              ],
+              [
+                -103.51808512053309,
+                43.32231884057971
+              ],
+              [
+                -103.51808512053309,
+                43.307826086956524
+              ]
+            ]
+          ],
+          [
+            [
+              [
+                -103.51808512053309,
+                43.3368115942029
+              ],
+              [
+                -103.49793782211255,
+                43.3368115942029
+              ],
+              [
+                -103.49793782211255,
+                43.35130434782609
+              ],
+              [
+                -103.51808512053309,
+                43.35130434782609
+              ],
+              [
+                -103.51808512053309,
+                43.3368115942029
+              ]
+            ]
+          ],
+          [
+            [
+              [
+                -103.53823241895361,
+                43.35130434782608
+              ],
+              [
+                -103.51808512053307,
+                43.35130434782608
+              ],
+              [
+                -103.51808512053307,
+                43.36579710144927
+              ],
+              [
+                -103.53823241895361,
+                43.36579710144927
+              ],
+              [
+                -103.53823241895361,
+                43.35130434782608
+              ]
+            ]
+          ],
+          [
+            [
+              [
+                -103.63896891105628,
+                43.423768115942025
+              ],
+              [
+                -103.61882161263574,
+                43.423768115942025
+              ],
+              [
+                -103.61882161263574,
+                43.43826086956521
+              ],
+              [
+                -103.63896891105628,
+                43.43826086956521
+              ],
+              [
+                -103.63896891105628,
+                43.423768115942025
+              ]
+            ]
+          ],
+          [
+            [
+              [
+                -103.59867431421522,
+                43.38028985507246
+              ],
+              [
+                -103.57852701579468,
+                43.38028985507246
+              ],
+              [
+                -103.57852701579468,
+                43.39478260869565
+              ],
+              [
+                -103.59867431421522,
+                43.39478260869565
+              ],
+              [
+                -103.59867431421522,
+                43.38028985507246
+              ]
+            ]
+          ],
+          [
+            [
+              [
+                -103.15543374896352,
+                43.264347826086954
+              ],
+              [
+                -103.13528645054298,
+                43.264347826086954
+              ],
+              [
+                -103.13528645054298,
+                43.27884057971014
+              ],
+              [
+                -103.15543374896352,
+                43.27884057971014
+              ],
+              [
+                -103.15543374896352,
+                43.264347826086954
+              ]
+            ]
+          ],
+          [
+            [
+              [
+                -103.43749592685096,
+                43.3368115942029
+              ],
+              [
+                -103.41734862843042,
+                43.3368115942029
+              ],
+              [
+                -103.41734862843042,
+                43.35130434782609
+              ],
+              [
+                -103.43749592685096,
+                43.35130434782609
+              ],
+              [
+                -103.43749592685096,
+                43.3368115942029
+              ]
+            ]
+          ],
+          [
+            [
+              [
+                -103.43749592685096,
+                43.35130434782608
+              ],
+              [
+                -103.41734862843042,
+                43.35130434782608
+              ],
+              [
+                -103.41734862843042,
+                43.36579710144927
+              ],
+              [
+                -103.43749592685096,
+                43.36579710144927
+              ],
+              [
+                -103.43749592685096,
+                43.35130434782608
+              ]
+            ]
+          ],
+          [
+            [
+              [
+                -103.43749592685096,
+                43.36579710144927
+              ],
+              [
+                -103.41734862843042,
+                43.36579710144927
+              ],
+              [
+                -103.41734862843042,
+                43.380289855072455
+              ],
+              [
+                -103.43749592685096,
+                43.380289855072455
+              ],
+              [
+                -103.43749592685096,
+                43.36579710144927
+              ]
+            ]
+          ],
+          [
+            [
+              [
+                -103.53823241895361,
+                43.36579710144927
+              ],
+              [
+                -103.51808512053307,
+                43.36579710144927
+              ],
+              [
+                -103.51808512053307,
+                43.380289855072455
+              ],
+              [
+                -103.53823241895361,
+                43.380289855072455
+              ],
+              [
+                -103.53823241895361,
+                43.36579710144927
+              ]
+            ]
+          ],
+          [
+            [
+              [
+                -103.6591162094768,
+                43.35130434782608
+              ],
+              [
+                -103.63896891105627,
+                43.35130434782608
+              ],
+              [
+                -103.63896891105627,
+                43.36579710144927
+              ],
+              [
+                -103.6591162094768,
+                43.36579710144927
+              ],
+              [
+                -103.6591162094768,
+                43.35130434782608
+              ]
+            ]
+          ],
+          [
+            [
+              [
+                -103.55837971737415,
+                44.48173913043478
+              ],
+              [
+                -103.53823241895361,
+                44.48173913043478
+              ],
+              [
+                -103.53823241895361,
+                44.49623188405797
+              ],
+              [
+                -103.55837971737415,
+                44.49623188405797
+              ],
+              [
+                -103.55837971737415,
+                44.48173913043478
+              ]
+            ]
+          ],
+          [
+            [
+              [
+                -103.57852701579469,
+                43.36579710144927
+              ],
+              [
+                -103.55837971737415,
+                43.36579710144927
+              ],
+              [
+                -103.55837971737415,
+                43.380289855072455
+              ],
+              [
+                -103.57852701579469,
+                43.380289855072455
+              ],
+              [
+                -103.57852701579469,
+                43.36579710144927
+              ]
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "name": "EXNI462App",
+        "type": "Uranium Exploration Permit",
+        "applicant": "Uranium Exploration Permit Application NOTE: In compliance with SDCL 45-6D-15, maps submitted with the application that ",
+        "county": "Fall River",
+        "status": "Unknown",
+        "source_pdf": "EXNI462App.pdf",
+        "source_url": "https://danr.sd.gov/Environment/MineralsMining/Exploration/docs/EXNI462App.pdf",
+        "extraction_method": "ocr",
+        "sections_count": 21,
+        "geometry_source": "plss_section",
+        "approximate_location": false,
+        "centroid_lon": -103.54831,
+        "centroid_lat": 43.37304
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -103.60073649210266,
+              43.177536231884055
+            ],
+            [
+              -103.39926350789734,
+              43.177536231884055
+            ],
+            [
+              -103.39926350789734,
+              43.322463768115945
+            ],
+            [
+              -103.60073649210266,
+              43.322463768115945
+            ],
+            [
+              -103.60073649210266,
+              43.177536231884055
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "name": "EXNI462CountyRegDeeds",
+        "type": "EXNI",
+        "applicant": "Fall River County Register of Deeds Filing Document",
+        "county": "Fall River",
+        "status": "Unknown",
+        "source_pdf": "EXNI462CountyRegDeeds.pdf",
+        "source_url": "https://danr.sd.gov/Environment/MineralsMining/Exploration/docs/EXNI462CountyRegDeeds.pdf",
+        "extraction_method": "pdfplumber",
+        "sections_count": 0,
+        "geometry_source": "county_fallback",
+        "approximate_location": true,
+        "centroid_lon": -103.5,
+        "centroid_lat": 43.25
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -103.55837971737415,
+              43.35130434782608
+            ],
+            [
+              -103.53823241895361,
+              43.35130434782608
+            ],
+            [
+              -103.53823241895361,
+              43.36579710144927
+            ],
+            [
+              -103.55837971737415,
+              43.36579710144927
+            ],
+            [
+              -103.55837971737415,
+              43.35130434782608
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "name": "EXNI462SeedMix",
+        "type": "EXNI",
+        "applicant": "Seed Mix Recommended by NRCS and US Forest Service",
+        "county": "Custer",
+        "status": "Unknown",
+        "source_pdf": "EXNI462SeedMix.pdf",
+        "source_url": "https://danr.sd.gov/Environment/MineralsMining/Exploration/docs/EXNI462SeedMix.pdf",
+        "extraction_method": "pdfplumber",
+        "sections_count": 1,
+        "geometry_source": "plss_section",
+        "approximate_location": false,
         "centroid_lon": -103.54831,
         "centroid_lat": 43.35855
       }
@@ -211,226 +2005,161 @@
           [
             [
               [
-                -103.55837971737415,
-                43.3368115942029
+                -103.47779052369202,
+                44.03246376811594
               ],
               [
-                -103.53823241895361,
-                43.3368115942029
+                -103.45764322527148,
+                44.03246376811594
               ],
               [
-                -103.53823241895361,
-                43.35130434782609
+                -103.45764322527148,
+                44.046956521739126
               ],
               [
-                -103.55837971737415,
-                43.35130434782609
+                -103.47779052369202,
+                44.046956521739126
               ],
               [
-                -103.55837971737415,
-                43.3368115942029
+                -103.47779052369202,
+                44.03246376811594
               ]
             ]
           ],
           [
             [
               [
-                -103.55837971737415,
-                43.32231884057971
+                -103.49793782211255,
+                44.03246376811594
+              ],
+              [
+                -103.47779052369201,
+                44.03246376811594
+              ],
+              [
+                -103.47779052369201,
+                44.046956521739126
+              ],
+              [
+                -103.49793782211255,
+                44.046956521739126
+              ],
+              [
+                -103.49793782211255,
+                44.03246376811594
+              ]
+            ]
+          ],
+          [
+            [
+              [
+                -103.51808512053309,
+                44.03246376811594
+              ],
+              [
+                -103.49793782211255,
+                44.03246376811594
+              ],
+              [
+                -103.49793782211255,
+                44.046956521739126
+              ],
+              [
+                -103.51808512053309,
+                44.046956521739126
+              ],
+              [
+                -103.51808512053309,
+                44.03246376811594
+              ]
+            ]
+          ],
+          [
+            [
+              [
+                -103.43749592685096,
+                44.061449275362314
+              ],
+              [
+                -103.41734862843042,
+                44.061449275362314
+              ],
+              [
+                -103.41734862843042,
+                44.0759420289855
+              ],
+              [
+                -103.43749592685096,
+                44.0759420289855
+              ],
+              [
+                -103.43749592685096,
+                44.061449275362314
+              ]
+            ]
+          ],
+          [
+            [
+              [
+                -103.53823241895361,
+                44.061449275362314
+              ],
+              [
+                -103.51808512053307,
+                44.061449275362314
+              ],
+              [
+                -103.51808512053307,
+                44.0759420289855
               ],
               [
                 -103.53823241895361,
-                43.32231884057971
+                44.0759420289855
               ],
               [
                 -103.53823241895361,
-                43.3368115942029
+                44.061449275362314
+              ]
+            ]
+          ],
+          [
+            [
+              [
+                -103.49793782211255,
+                44.046956521739126
               ],
               [
-                -103.55837971737415,
-                43.3368115942029
+                -103.47779052369201,
+                44.046956521739126
               ],
               [
-                -103.55837971737415,
-                43.32231884057971
+                -103.47779052369201,
+                44.061449275362314
+              ],
+              [
+                -103.49793782211255,
+                44.061449275362314
+              ],
+              [
+                -103.49793782211255,
+                44.046956521739126
               ]
             ]
           ]
         ]
       },
       "properties": {
-        "name": "Clean Nuclear Energy - October Jinx Project (Uranium)",
+        "name": "EXNI469App",
         "type": "Uranium Exploration Permit",
-        "applicant": "Clean Nuclear Energy Corp.",
-        "county": "Fall River",
-        "status": "Filed - DANR Comment Review",
-        "note": "Test hole locations confidential per SDCL 45-6D-15. November 2024 application.",
-        "source_pdf": "EXNI462App.pdf",
-        "sections_count": 2,
-        "centroid_lon": -103.54831,
-        "centroid_lat": 43.34406
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "MultiPolygon",
-        "coordinates": [
-          [
-            [
-              [
-                -103.47779052369202,
-                44.03246376811594
-              ],
-              [
-                -103.45764322527148,
-                44.03246376811594
-              ],
-              [
-                -103.45764322527148,
-                44.046956521739126
-              ],
-              [
-                -103.47779052369202,
-                44.046956521739126
-              ],
-              [
-                -103.47779052369202,
-                44.03246376811594
-              ]
-            ]
-          ],
-          [
-            [
-              [
-                -103.49793782211255,
-                44.03246376811594
-              ],
-              [
-                -103.47779052369201,
-                44.03246376811594
-              ],
-              [
-                -103.47779052369201,
-                44.046956521739126
-              ],
-              [
-                -103.49793782211255,
-                44.046956521739126
-              ],
-              [
-                -103.49793782211255,
-                44.03246376811594
-              ]
-            ]
-          ],
-          [
-            [
-              [
-                -103.51808512053309,
-                44.03246376811594
-              ],
-              [
-                -103.49793782211255,
-                44.03246376811594
-              ],
-              [
-                -103.49793782211255,
-                44.046956521739126
-              ],
-              [
-                -103.51808512053309,
-                44.046956521739126
-              ],
-              [
-                -103.51808512053309,
-                44.03246376811594
-              ]
-            ]
-          ],
-          [
-            [
-              [
-                -103.43749592685096,
-                44.061449275362314
-              ],
-              [
-                -103.41734862843042,
-                44.061449275362314
-              ],
-              [
-                -103.41734862843042,
-                44.0759420289855
-              ],
-              [
-                -103.43749592685096,
-                44.0759420289855
-              ],
-              [
-                -103.43749592685096,
-                44.061449275362314
-              ]
-            ]
-          ],
-          [
-            [
-              [
-                -103.53823241895361,
-                44.061449275362314
-              ],
-              [
-                -103.51808512053307,
-                44.061449275362314
-              ],
-              [
-                -103.51808512053307,
-                44.0759420289855
-              ],
-              [
-                -103.53823241895361,
-                44.0759420289855
-              ],
-              [
-                -103.53823241895361,
-                44.061449275362314
-              ]
-            ]
-          ],
-          [
-            [
-              [
-                -103.49793782211255,
-                44.046956521739126
-              ],
-              [
-                -103.47779052369201,
-                44.046956521739126
-              ],
-              [
-                -103.47779052369201,
-                44.061449275362314
-              ],
-              [
-                -103.49793782211255,
-                44.061449275362314
-              ],
-              [
-                -103.49793782211255,
-                44.046956521739126
-              ]
-            ]
-          ]
-        ]
-      },
-      "properties": {
-        "name": "Pete Lien & Sons EXNI 469 - Rochford Graphite",
-        "type": "EXNI",
-        "applicant": "Pete Lien & Sons, Inc.",
+        "applicant": "EXNI Application In compliance with SDCL 45-6C-14, maps submitted with the application that show test hole locations are",
         "county": "Pennington",
-        "status": "Filed March 2026",
-        "note": "Sections 3,4,5 T1N R3E; Sections 25,30,33 T2N R3E. Rochford Graphite Exploration Project. Test hole locations confidential per SDCL 45-6C-14.",
+        "status": "Unknown",
         "source_pdf": "EXNI469App.pdf",
+        "source_url": "https://danr.sd.gov/Environment/MineralsMining/Exploration/docs/EXNI469App.pdf",
+        "extraction_method": "pdfplumber",
         "sections_count": 6,
+        "geometry_source": "plss_section",
+        "approximate_location": false,
         "centroid_lon": -103.46772,
         "centroid_lat": 44.03971
       }
@@ -443,328 +2172,1141 @@
           [
             [
               [
-                -103.61882161263574,
-                44.23536231884057
+                -103.53823241895361,
+                43.97449275362318
               ],
               [
-                -103.5986743142152,
-                44.23536231884057
+                -103.51808512053307,
+                43.97449275362318
               ],
               [
-                -103.5986743142152,
-                44.24985507246376
+                -103.51808512053307,
+                43.98898550724637
               ],
               [
-                -103.61882161263574,
-                44.24985507246376
+                -103.53823241895361,
+                43.98898550724637
               ],
               [
-                -103.61882161263574,
-                44.23536231884057
+                -103.53823241895361,
+                43.97449275362318
               ]
             ]
           ],
           [
             [
               [
-                -103.63896891105628,
-                44.220869565217384
+                -103.49793782211255,
+                43.959999999999994
               ],
               [
-                -103.61882161263574,
-                44.220869565217384
+                -103.47779052369201,
+                43.959999999999994
               ],
               [
-                -103.61882161263574,
-                44.23536231884057
+                -103.47779052369201,
+                43.97449275362318
               ],
               [
-                -103.63896891105628,
-                44.23536231884057
+                -103.49793782211255,
+                43.97449275362318
               ],
               [
-                -103.63896891105628,
-                44.220869565217384
+                -103.49793782211255,
+                43.959999999999994
               ]
             ]
           ],
           [
             [
               [
-                -103.61882161263574,
-                44.220869565217384
+                -103.43749592685096,
+                44.061449275362314
               ],
               [
-                -103.5986743142152,
-                44.220869565217384
+                -103.41734862843042,
+                44.061449275362314
               ],
               [
-                -103.5986743142152,
-                44.23536231884057
+                -103.41734862843042,
+                44.0759420289855
               ],
               [
-                -103.61882161263574,
-                44.23536231884057
+                -103.43749592685096,
+                44.0759420289855
               ],
               [
-                -103.61882161263574,
-                44.220869565217384
-              ]
-            ]
-          ],
-          [
-            [
-              [
-                -103.61882161263574,
-                44.206376811594204
-              ],
-              [
-                -103.5986743142152,
-                44.206376811594204
-              ],
-              [
-                -103.5986743142152,
-                44.22086956521739
-              ],
-              [
-                -103.61882161263574,
-                44.22086956521739
-              ],
-              [
-                -103.61882161263574,
-                44.206376811594204
-              ]
-            ]
-          ],
-          [
-            [
-              [
-                -103.63896891105628,
-                44.206376811594204
-              ],
-              [
-                -103.61882161263574,
-                44.206376811594204
-              ],
-              [
-                -103.61882161263574,
-                44.22086956521739
-              ],
-              [
-                -103.63896891105628,
-                44.22086956521739
-              ],
-              [
-                -103.63896891105628,
-                44.206376811594204
-              ]
-            ]
-          ],
-          [
-            [
-              [
-                -103.6591162094768,
-                44.206376811594204
-              ],
-              [
-                -103.63896891105627,
-                44.206376811594204
-              ],
-              [
-                -103.63896891105627,
-                44.22086956521739
-              ],
-              [
-                -103.6591162094768,
-                44.22086956521739
-              ],
-              [
-                -103.6591162094768,
-                44.206376811594204
-              ]
-            ]
-          ],
-          [
-            [
-              [
-                -103.6591162094768,
-                44.191884057971016
-              ],
-              [
-                -103.63896891105627,
-                44.191884057971016
-              ],
-              [
-                -103.63896891105627,
-                44.206376811594204
-              ],
-              [
-                -103.6591162094768,
-                44.206376811594204
-              ],
-              [
-                -103.6591162094768,
-                44.191884057971016
-              ]
-            ]
-          ],
-          [
-            [
-              [
-                -103.63896891105628,
-                44.191884057971016
-              ],
-              [
-                -103.61882161263574,
-                44.191884057971016
-              ],
-              [
-                -103.61882161263574,
-                44.206376811594204
-              ],
-              [
-                -103.63896891105628,
-                44.206376811594204
-              ],
-              [
-                -103.63896891105628,
-                44.191884057971016
-              ]
-            ]
-          ],
-          [
-            [
-              [
-                -103.61882161263574,
-                44.191884057971016
-              ],
-              [
-                -103.5986743142152,
-                44.191884057971016
-              ],
-              [
-                -103.5986743142152,
-                44.206376811594204
-              ],
-              [
-                -103.61882161263574,
-                44.206376811594204
-              ],
-              [
-                -103.61882161263574,
-                44.191884057971016
-              ]
-            ]
-          ],
-          [
-            [
-              [
-                -103.61882161263574,
-                44.17739130434783
-              ],
-              [
-                -103.5986743142152,
-                44.17739130434783
-              ],
-              [
-                -103.5986743142152,
-                44.191884057971016
-              ],
-              [
-                -103.61882161263574,
-                44.191884057971016
-              ],
-              [
-                -103.61882161263574,
-                44.17739130434783
-              ]
-            ]
-          ],
-          [
-            [
-              [
-                -103.73970540315894,
-                44.24985507246377
-              ],
-              [
-                -103.7195581047384,
-                44.24985507246377
-              ],
-              [
-                -103.7195581047384,
-                44.264347826086954
-              ],
-              [
-                -103.73970540315894,
-                44.264347826086954
-              ],
-              [
-                -103.73970540315894,
-                44.24985507246377
-              ]
-            ]
-          ],
-          [
-            [
-              [
-                -103.71955810473841,
-                44.24985507246377
-              ],
-              [
-                -103.69941080631787,
-                44.24985507246377
-              ],
-              [
-                -103.69941080631787,
-                44.264347826086954
-              ],
-              [
-                -103.71955810473841,
-                44.264347826086954
-              ],
-              [
-                -103.71955810473841,
-                44.24985507246377
-              ]
-            ]
-          ],
-          [
-            [
-              [
-                -103.73970540315894,
-                44.23536231884057
-              ],
-              [
-                -103.7195581047384,
-                44.23536231884057
-              ],
-              [
-                -103.7195581047384,
-                44.24985507246376
-              ],
-              [
-                -103.73970540315894,
-                44.24985507246376
-              ],
-              [
-                -103.73970540315894,
-                44.23536231884057
+                -103.43749592685096,
+                44.061449275362314
               ]
             ]
           ]
         ]
       },
       "properties": {
-        "name": "Solitario Resources Corp EXNI 470 - Ponderosa Project",
+        "name": "EXNI469CountyNotification",
         "type": "EXNI",
-        "applicant": "Solitario Resources Corp.",
+        "applicant": "DANR Notification to the Pennington County Commission",
+        "county": "Pennington",
+        "status": "Unknown",
+        "source_pdf": "EXNI469CountyNotification.pdf",
+        "source_url": "https://danr.sd.gov/Environment/MineralsMining/Exploration/docs/EXNI469CountyNotification.pdf",
+        "extraction_method": "pdfplumber",
+        "sections_count": 3,
+        "geometry_source": "plss_section",
+        "approximate_location": false,
+        "centroid_lon": -103.52816,
+        "centroid_lat": 43.98174
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "MultiPolygon",
+        "coordinates": [
+          [
+            [
+              [
+                -103.53823241895361,
+                43.97449275362318
+              ],
+              [
+                -103.51808512053307,
+                43.97449275362318
+              ],
+              [
+                -103.51808512053307,
+                43.98898550724637
+              ],
+              [
+                -103.53823241895361,
+                43.98898550724637
+              ],
+              [
+                -103.53823241895361,
+                43.97449275362318
+              ]
+            ]
+          ],
+          [
+            [
+              [
+                -103.49793782211255,
+                43.959999999999994
+              ],
+              [
+                -103.47779052369201,
+                43.959999999999994
+              ],
+              [
+                -103.47779052369201,
+                43.97449275362318
+              ],
+              [
+                -103.49793782211255,
+                43.97449275362318
+              ],
+              [
+                -103.49793782211255,
+                43.959999999999994
+              ]
+            ]
+          ],
+          [
+            [
+              [
+                -103.43749592685096,
+                44.061449275362314
+              ],
+              [
+                -103.41734862843042,
+                44.061449275362314
+              ],
+              [
+                -103.41734862843042,
+                44.0759420289855
+              ],
+              [
+                -103.43749592685096,
+                44.0759420289855
+              ],
+              [
+                -103.43749592685096,
+                44.061449275362314
+              ]
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "name": "EXNI469NoticeofIntent",
+        "type": "EXNI",
+        "applicant": "Notice of Filing",
+        "county": "Pennington",
+        "status": "Unknown",
+        "source_pdf": "EXNI469NoticeofIntent.pdf",
+        "source_url": "https://danr.sd.gov/Environment/MineralsMining/Exploration/docs/EXNI469NoticeofIntent.pdf",
+        "extraction_method": "pdfplumber",
+        "sections_count": 3,
+        "geometry_source": "plss_section",
+        "approximate_location": false,
+        "centroid_lon": -103.52816,
+        "centroid_lat": 43.98174
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "MultiPolygon",
+        "coordinates": [
+          [
+            [
+              [
+                -103.55837971737415,
+                44.061449275362314
+              ],
+              [
+                -103.53823241895361,
+                44.061449275362314
+              ],
+              [
+                -103.53823241895361,
+                44.0759420289855
+              ],
+              [
+                -103.55837971737415,
+                44.0759420289855
+              ],
+              [
+                -103.55837971737415,
+                44.061449275362314
+              ]
+            ]
+          ],
+          [
+            [
+              [
+                -103.53823241895361,
+                44.061449275362314
+              ],
+              [
+                -103.51808512053307,
+                44.061449275362314
+              ],
+              [
+                -103.51808512053307,
+                44.0759420289855
+              ],
+              [
+                -103.53823241895361,
+                44.0759420289855
+              ],
+              [
+                -103.53823241895361,
+                44.061449275362314
+              ]
+            ]
+          ],
+          [
+            [
+              [
+                -103.51808512053309,
+                44.046956521739126
+              ],
+              [
+                -103.49793782211255,
+                44.046956521739126
+              ],
+              [
+                -103.49793782211255,
+                44.061449275362314
+              ],
+              [
+                -103.51808512053309,
+                44.061449275362314
+              ],
+              [
+                -103.51808512053309,
+                44.046956521739126
+              ]
+            ]
+          ],
+          [
+            [
+              [
+                -103.49793782211255,
+                44.046956521739126
+              ],
+              [
+                -103.47779052369201,
+                44.046956521739126
+              ],
+              [
+                -103.47779052369201,
+                44.061449275362314
+              ],
+              [
+                -103.49793782211255,
+                44.061449275362314
+              ],
+              [
+                -103.49793782211255,
+                44.046956521739126
+              ]
+            ]
+          ],
+          [
+            [
+              [
+                -103.47779052369202,
+                44.03246376811594
+              ],
+              [
+                -103.45764322527148,
+                44.03246376811594
+              ],
+              [
+                -103.45764322527148,
+                44.046956521739126
+              ],
+              [
+                -103.47779052369202,
+                44.046956521739126
+              ],
+              [
+                -103.47779052369202,
+                44.03246376811594
+              ]
+            ]
+          ],
+          [
+            [
+              [
+                -103.49793782211255,
+                44.03246376811594
+              ],
+              [
+                -103.47779052369201,
+                44.03246376811594
+              ],
+              [
+                -103.47779052369201,
+                44.046956521739126
+              ],
+              [
+                -103.49793782211255,
+                44.046956521739126
+              ],
+              [
+                -103.49793782211255,
+                44.03246376811594
+              ]
+            ]
+          ],
+          [
+            [
+              [
+                -103.51808512053309,
+                44.03246376811594
+              ],
+              [
+                -103.49793782211255,
+                44.03246376811594
+              ],
+              [
+                -103.49793782211255,
+                44.046956521739126
+              ],
+              [
+                -103.51808512053309,
+                44.046956521739126
+              ],
+              [
+                -103.51808512053309,
+                44.03246376811594
+              ]
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "name": "EXNI469SupplementalInfo",
+        "type": "Uranium Exploration Permit",
+        "applicant": "Response to DANR Comments Submitted by Pete Lien and Sons",
+        "county": "Pennington",
+        "status": "Unknown",
+        "source_pdf": "EXNI469SupplementalInfo.pdf",
+        "source_url": "https://danr.sd.gov/Environment/MineralsMining/Exploration/docs/EXNI469SupplementalInfo.pdf",
+        "extraction_method": "ocr",
+        "sections_count": 7,
+        "geometry_source": "plss_section",
+        "approximate_location": false,
+        "centroid_lon": -103.54831,
+        "centroid_lat": 44.0687
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "MultiPolygon",
+        "coordinates": [
+          [
+            [
+              [
+                -103.47779052369202,
+                44.11942028985507
+              ],
+              [
+                -103.45764322527148,
+                44.11942028985507
+              ],
+              [
+                -103.45764322527148,
+                44.13391304347826
+              ],
+              [
+                -103.47779052369202,
+                44.13391304347826
+              ],
+              [
+                -103.47779052369202,
+                44.11942028985507
+              ]
+            ]
+          ],
+          [
+            [
+              [
+                -103.49793782211255,
+                44.11942028985507
+              ],
+              [
+                -103.47779052369201,
+                44.11942028985507
+              ],
+              [
+                -103.47779052369201,
+                44.13391304347826
+              ],
+              [
+                -103.49793782211255,
+                44.13391304347826
+              ],
+              [
+                -103.49793782211255,
+                44.11942028985507
+              ]
+            ]
+          ],
+          [
+            [
+              [
+                -103.43749592685096,
+                44.061449275362314
+              ],
+              [
+                -103.41734862843042,
+                44.061449275362314
+              ],
+              [
+                -103.41734862843042,
+                44.0759420289855
+              ],
+              [
+                -103.43749592685096,
+                44.0759420289855
+              ],
+              [
+                -103.43749592685096,
+                44.061449275362314
+              ]
+            ]
+          ],
+          [
+            [
+              [
+                -103.53823241895361,
+                44.061449275362314
+              ],
+              [
+                -103.51808512053307,
+                44.061449275362314
+              ],
+              [
+                -103.51808512053307,
+                44.0759420289855
+              ],
+              [
+                -103.53823241895361,
+                44.0759420289855
+              ],
+              [
+                -103.53823241895361,
+                44.061449275362314
+              ]
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "name": "EXNI469RestrictionLetter",
+        "type": "EXNI",
+        "applicant": "DANR Restriction Letter",
+        "county": "Pennington",
+        "status": "Unknown",
+        "source_pdf": "EXNI469RestrictionLetter.pdf",
+        "source_url": "https://danr.sd.gov/Environment/MineralsMining/Exploration/docs/EXNI469RestrictionLetter.pdf",
+        "extraction_method": "ocr",
+        "sections_count": 4,
+        "geometry_source": "plss_section",
+        "approximate_location": false,
+        "centroid_lon": -103.46772,
+        "centroid_lat": 44.12667
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "MultiPolygon",
+        "coordinates": [
+          [
+            [
+              [
+                -103.61882161263574,
+                44.23536231884057
+              ],
+              [
+                -103.5986743142152,
+                44.23536231884057
+              ],
+              [
+                -103.5986743142152,
+                44.24985507246376
+              ],
+              [
+                -103.61882161263574,
+                44.24985507246376
+              ],
+              [
+                -103.61882161263574,
+                44.23536231884057
+              ]
+            ]
+          ],
+          [
+            [
+              [
+                -103.63896891105628,
+                44.220869565217384
+              ],
+              [
+                -103.61882161263574,
+                44.220869565217384
+              ],
+              [
+                -103.61882161263574,
+                44.23536231884057
+              ],
+              [
+                -103.63896891105628,
+                44.23536231884057
+              ],
+              [
+                -103.63896891105628,
+                44.220869565217384
+              ]
+            ]
+          ],
+          [
+            [
+              [
+                -103.61882161263574,
+                44.206376811594204
+              ],
+              [
+                -103.5986743142152,
+                44.206376811594204
+              ],
+              [
+                -103.5986743142152,
+                44.22086956521739
+              ],
+              [
+                -103.61882161263574,
+                44.22086956521739
+              ],
+              [
+                -103.61882161263574,
+                44.206376811594204
+              ]
+            ]
+          ],
+          [
+            [
+              [
+                -103.63896891105628,
+                44.206376811594204
+              ],
+              [
+                -103.61882161263574,
+                44.206376811594204
+              ],
+              [
+                -103.61882161263574,
+                44.22086956521739
+              ],
+              [
+                -103.63896891105628,
+                44.22086956521739
+              ],
+              [
+                -103.63896891105628,
+                44.206376811594204
+              ]
+            ]
+          ],
+          [
+            [
+              [
+                -103.6591162094768,
+                44.206376811594204
+              ],
+              [
+                -103.63896891105627,
+                44.206376811594204
+              ],
+              [
+                -103.63896891105627,
+                44.22086956521739
+              ],
+              [
+                -103.6591162094768,
+                44.22086956521739
+              ],
+              [
+                -103.6591162094768,
+                44.206376811594204
+              ]
+            ]
+          ],
+          [
+            [
+              [
+                -103.6591162094768,
+                44.191884057971016
+              ],
+              [
+                -103.63896891105627,
+                44.191884057971016
+              ],
+              [
+                -103.63896891105627,
+                44.206376811594204
+              ],
+              [
+                -103.6591162094768,
+                44.206376811594204
+              ],
+              [
+                -103.6591162094768,
+                44.191884057971016
+              ]
+            ]
+          ],
+          [
+            [
+              [
+                -103.63896891105628,
+                44.191884057971016
+              ],
+              [
+                -103.61882161263574,
+                44.191884057971016
+              ],
+              [
+                -103.61882161263574,
+                44.206376811594204
+              ],
+              [
+                -103.63896891105628,
+                44.206376811594204
+              ],
+              [
+                -103.63896891105628,
+                44.191884057971016
+              ]
+            ]
+          ],
+          [
+            [
+              [
+                -103.61882161263574,
+                44.191884057971016
+              ],
+              [
+                -103.5986743142152,
+                44.191884057971016
+              ],
+              [
+                -103.5986743142152,
+                44.206376811594204
+              ],
+              [
+                -103.61882161263574,
+                44.206376811594204
+              ],
+              [
+                -103.61882161263574,
+                44.191884057971016
+              ]
+            ]
+          ],
+          [
+            [
+              [
+                -103.73970540315894,
+                44.24985507246377
+              ],
+              [
+                -103.7195581047384,
+                44.24985507246377
+              ],
+              [
+                -103.7195581047384,
+                44.264347826086954
+              ],
+              [
+                -103.73970540315894,
+                44.264347826086954
+              ],
+              [
+                -103.73970540315894,
+                44.24985507246377
+              ]
+            ]
+          ],
+          [
+            [
+              [
+                -103.71955810473841,
+                44.24985507246377
+              ],
+              [
+                -103.69941080631787,
+                44.24985507246377
+              ],
+              [
+                -103.69941080631787,
+                44.264347826086954
+              ],
+              [
+                -103.71955810473841,
+                44.264347826086954
+              ],
+              [
+                -103.71955810473841,
+                44.24985507246377
+              ]
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "name": "EXNI470App",
+        "type": "Uranium Exploration Permit",
+        "applicant": "EXNI Application In compliance with SDCL 45-6C-14, maps submitted with the application that show test hole locations are",
         "county": "Lawrence",
-        "status": "Filed",
-        "note": "T4N R2E Sec 28,32,33; T3N R2E Sec 4,5,6,7,8,9,16; T4N R1E Sec 21,22,28. Ponderosa Project, Lawrence County. Test hole locations confidential per SDCL 45-6C-14.",
+        "status": "Unknown",
         "source_pdf": "EXNI470App.pdf",
-        "sections_count": 13,
+        "source_url": "https://danr.sd.gov/Environment/MineralsMining/Exploration/docs/EXNI470App.pdf",
+        "extraction_method": "pdfplumber",
+        "sections_count": 10,
+        "geometry_source": "plss_section",
+        "approximate_location": false,
         "centroid_lon": -103.60875,
         "centroid_lat": 44.24261
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "MultiPolygon",
+        "coordinates": [
+          [
+            [
+              [
+                -103.61882161263574,
+                44.29333333333333
+              ],
+              [
+                -103.5986743142152,
+                44.29333333333333
+              ],
+              [
+                -103.5986743142152,
+                44.30782608695652
+              ],
+              [
+                -103.61882161263574,
+                44.30782608695652
+              ],
+              [
+                -103.61882161263574,
+                44.29333333333333
+              ]
+            ]
+          ],
+          [
+            [
+              [
+                -103.63896891105628,
+                44.29333333333333
+              ],
+              [
+                -103.61882161263574,
+                44.29333333333333
+              ],
+              [
+                -103.61882161263574,
+                44.30782608695652
+              ],
+              [
+                -103.63896891105628,
+                44.30782608695652
+              ],
+              [
+                -103.63896891105628,
+                44.29333333333333
+              ]
+            ]
+          ],
+          [
+            [
+              [
+                -103.6591162094768,
+                44.29333333333333
+              ],
+              [
+                -103.63896891105627,
+                44.29333333333333
+              ],
+              [
+                -103.63896891105627,
+                44.30782608695652
+              ],
+              [
+                -103.6591162094768,
+                44.30782608695652
+              ],
+              [
+                -103.6591162094768,
+                44.29333333333333
+              ]
+            ]
+          ],
+          [
+            [
+              [
+                -103.6591162094768,
+                44.27884057971014
+              ],
+              [
+                -103.63896891105627,
+                44.27884057971014
+              ],
+              [
+                -103.63896891105627,
+                44.29333333333333
+              ],
+              [
+                -103.6591162094768,
+                44.29333333333333
+              ],
+              [
+                -103.6591162094768,
+                44.27884057971014
+              ]
+            ]
+          ],
+          [
+            [
+              [
+                -103.63896891105628,
+                44.27884057971014
+              ],
+              [
+                -103.61882161263574,
+                44.27884057971014
+              ],
+              [
+                -103.61882161263574,
+                44.29333333333333
+              ],
+              [
+                -103.63896891105628,
+                44.29333333333333
+              ],
+              [
+                -103.63896891105628,
+                44.27884057971014
+              ]
+            ]
+          ],
+          [
+            [
+              [
+                -103.61882161263574,
+                44.27884057971014
+              ],
+              [
+                -103.5986743142152,
+                44.27884057971014
+              ],
+              [
+                -103.5986743142152,
+                44.29333333333333
+              ],
+              [
+                -103.61882161263574,
+                44.29333333333333
+              ],
+              [
+                -103.61882161263574,
+                44.27884057971014
+              ]
+            ]
+          ],
+          [
+            [
+              [
+                -103.61882161263574,
+                44.16289855072464
+              ],
+              [
+                -103.5986743142152,
+                44.16289855072464
+              ],
+              [
+                -103.5986743142152,
+                44.17739130434783
+              ],
+              [
+                -103.61882161263574,
+                44.17739130434783
+              ],
+              [
+                -103.61882161263574,
+                44.16289855072464
+              ]
+            ]
+          ],
+          [
+            [
+              [
+                -103.59867431421522,
+                44.16289855072464
+              ],
+              [
+                -103.57852701579468,
+                44.16289855072464
+              ],
+              [
+                -103.57852701579468,
+                44.17739130434783
+              ],
+              [
+                -103.59867431421522,
+                44.17739130434783
+              ],
+              [
+                -103.59867431421522,
+                44.16289855072464
+              ]
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "name": "EXNI470NOF",
+        "type": "EXNI",
+        "applicant": "Notice of Filing",
+        "county": "Lawrence",
+        "status": "Unknown",
+        "source_pdf": "EXNI470NOF.pdf",
+        "source_url": "https://danr.sd.gov/Environment/MineralsMining/Exploration/docs/EXNI470NOF.pdf",
+        "extraction_method": "pdfplumber",
+        "sections_count": 8,
+        "geometry_source": "plss_section",
+        "approximate_location": false,
+        "centroid_lon": -103.60875,
+        "centroid_lat": 44.30058
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "MultiPolygon",
+        "coordinates": [
+          [
+            [
+              [
+                -103.61882161263574,
+                44.29333333333333
+              ],
+              [
+                -103.5986743142152,
+                44.29333333333333
+              ],
+              [
+                -103.5986743142152,
+                44.30782608695652
+              ],
+              [
+                -103.61882161263574,
+                44.30782608695652
+              ],
+              [
+                -103.61882161263574,
+                44.29333333333333
+              ]
+            ]
+          ],
+          [
+            [
+              [
+                -103.63896891105628,
+                44.29333333333333
+              ],
+              [
+                -103.61882161263574,
+                44.29333333333333
+              ],
+              [
+                -103.61882161263574,
+                44.30782608695652
+              ],
+              [
+                -103.63896891105628,
+                44.30782608695652
+              ],
+              [
+                -103.63896891105628,
+                44.29333333333333
+              ]
+            ]
+          ],
+          [
+            [
+              [
+                -103.6591162094768,
+                44.29333333333333
+              ],
+              [
+                -103.63896891105627,
+                44.29333333333333
+              ],
+              [
+                -103.63896891105627,
+                44.30782608695652
+              ],
+              [
+                -103.6591162094768,
+                44.30782608695652
+              ],
+              [
+                -103.6591162094768,
+                44.29333333333333
+              ]
+            ]
+          ],
+          [
+            [
+              [
+                -103.6591162094768,
+                44.27884057971014
+              ],
+              [
+                -103.63896891105627,
+                44.27884057971014
+              ],
+              [
+                -103.63896891105627,
+                44.29333333333333
+              ],
+              [
+                -103.6591162094768,
+                44.29333333333333
+              ],
+              [
+                -103.6591162094768,
+                44.27884057971014
+              ]
+            ]
+          ],
+          [
+            [
+              [
+                -103.63896891105628,
+                44.27884057971014
+              ],
+              [
+                -103.61882161263574,
+                44.27884057971014
+              ],
+              [
+                -103.61882161263574,
+                44.29333333333333
+              ],
+              [
+                -103.63896891105628,
+                44.29333333333333
+              ],
+              [
+                -103.63896891105628,
+                44.27884057971014
+              ]
+            ]
+          ],
+          [
+            [
+              [
+                -103.61882161263574,
+                44.27884057971014
+              ],
+              [
+                -103.5986743142152,
+                44.27884057971014
+              ],
+              [
+                -103.5986743142152,
+                44.29333333333333
+              ],
+              [
+                -103.61882161263574,
+                44.29333333333333
+              ],
+              [
+                -103.61882161263574,
+                44.27884057971014
+              ]
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "name": "EXNI470CountyNotice",
+        "type": "EXNI",
+        "applicant": "DANR Notification to the Lawrence County Commission",
+        "county": "Lawrence",
+        "status": "Unknown",
+        "source_pdf": "EXNI470CountyNotice.pdf",
+        "source_url": "https://danr.sd.gov/Environment/MineralsMining/Exploration/docs/EXNI470CountyNotice.pdf",
+        "extraction_method": "pdfplumber",
+        "sections_count": 6,
+        "geometry_source": "plss_section",
+        "approximate_location": false,
+        "centroid_lon": -103.60875,
+        "centroid_lat": 44.30058
       }
     }
   ]

@@ -34,3 +34,10 @@ dask[array]>=2026.3.0
 # Testing and catalog sync
 pytest>=7.0
 requests>=2.28
+
+# PDF parsing for DANR EXNI/uranium permit applications
+# Requires system packages: apt install tesseract-ocr poppler-utils
+pdfplumber>=0.11
+pdf2image>=1.17
+pytesseract>=0.3.10
+beautifulsoup4>=4.12

@@ -134,6 +134,10 @@ class DatasetSpec:
     resampling_method: Literal["bilinear", "nearest", "cubic"] | None = None  # None = auto-detect from data_type
     display_name: str | None = None  # Human-readable label for visualization panels (falls back to name)
     description: str | None = None   # One-line subtitle shown below the panel title
+    # Optional case-insensitive substring used to pick a specific file out of
+    # multi-layer archives (e.g. WBDHU8 inside a USGS WBD bundle that contains
+    # WBDHU2/4/6/8/10/12). Falls back to first match if no candidates contain it.
+    file_pattern: str | None = None
     # STAC fields — set is_stac=True to discover and download via a STAC catalog
     is_stac: bool = False
     stac_collection: str | None = None   # e.g. "sentinel-2-l2a"
@@ -740,7 +744,7 @@ def extract_archive_if_needed(path: Path, output_dir: Path, verbose: bool = True
     return extract_dir
 
 
-def discover_dataset_file(dataset_dir: Path, data_type: str) -> Path:
+def discover_dataset_file(dataset_dir: Path, data_type: str, file_pattern: str | None = None) -> Path:
     if data_type == "raster":
         candidates = (
             list(dataset_dir.rglob("*.tif"))
@@ -758,6 +762,13 @@ def discover_dataset_file(dataset_dir: Path, data_type: str) -> Path:
             f"No {data_type} files found in {dataset_dir}. "
             f"Expected {'*.tif / *.tiff / *.img' if data_type == 'raster' else '*.geojson / *.shp'} files."
         )
+
+    if file_pattern:
+        filtered = [c for c in candidates if file_pattern.lower() in c.name.lower()]
+        if filtered:
+            candidates = filtered
+        else:
+            print(f"  WARNING: file_pattern {file_pattern!r} matched no files; falling back to first candidate")
 
     if len(candidates) > 1:
         print(f"  WARNING: Found {len(candidates)} {data_type} files, using: {candidates[0].name}")
@@ -1684,6 +1695,10 @@ def _plot_vector_on_ax(path: Path, ax, *, facecolor='steelblue', edgecolor='blac
             geom = shapely_shape(feat["geometry"])
             for polygon in _iter_polygons(geom):
                 exterior_coords = np.array(polygon.exterior.coords)
+                # Some sources (e.g. NHD shapefiles) include a Z coordinate per
+                # vertex; matplotlib's Polygon only accepts (N, 2).
+                if exterior_coords.ndim == 2 and exterior_coords.shape[1] > 2:
+                    exterior_coords = exterior_coords[:, :2]
                 patches.append(MplPolygon(exterior_coords, closed=True))
 
     if patches and bounds is not None:
@@ -3181,7 +3196,7 @@ def _run_harmonization_inner(workflow: ExampleWorkflow, _wall_start: float) -> t
                 # Standard download + extract workflow
                 downloaded = download_file(dataset.url, dataset_dir, workflow.verbose)
                 extracted_dir = extract_archive_if_needed(downloaded, dataset_dir, workflow.verbose)
-                source_file = discover_dataset_file(extracted_dir, dataset.data_type)
+                source_file = discover_dataset_file(extracted_dir, dataset.data_type, dataset.file_pattern)
                 
                 # Try to discover color map from extracted data
                 if global_color_map is None and dataset.data_type == "raster":

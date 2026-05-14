@@ -112,14 +112,53 @@ DATASETS = [
     ),
 
     # ── Hydrology & Water Resources (Primary Focus) ────────────────────────────
-    
-    # Note: USGS WBD (GDB format) and 3DHP (GeoPackage) are excluded because
-    # the harmonizer only discovers .shp and .geojson vector files.
-    # These datasets require pre-conversion with ogr2ogr before harmonization.
-    
+
+    # USGS Watershed Boundary Dataset — HUC-8 sub-basins (Missouri region, HU2=10).
+    # The bundled zip contains WBDHU2/4/6/8/10/12 layers; file_pattern picks HUC-8.
+    DatasetSpec(
+        name="watersheds_huc8",
+        display_name="Watersheds (HUC-8)",
+        description="USGS NHD Watershed Boundary Dataset — HUC-8 sub-basins (Missouri region)",
+        url="https://prd-tnm.s3.amazonaws.com/StagedProducts/Hydrography/WBD/HU2/Shape/WBD_10_HU2_Shape.zip",
+        data_type="vector",
+        rasterize=False,
+        file_pattern="WBDHU8",
+    ),
+
+    # USGS National Hydrography Dataset — surface waterbodies (lakes, ponds, reservoirs).
+    # HU4=1012 (Cheyenne basin) covers the southern Black Hills; flowlines from the
+    # same bundle are intentionally skipped — at ~300 MB the shapefile is too large
+    # to harmonize on small machines.
+    DatasetSpec(
+        name="nhd_waterbodies",
+        display_name="Surface Waterbodies (NHD)",
+        description="USGS NHD lakes, ponds, reservoirs (Cheyenne HU4=1012)",
+        url="https://prd-tnm.s3.amazonaws.com/StagedProducts/Hydrography/NHD/HU4/Shape/NHD_H_1012_HU4_Shape.zip",
+        data_type="vector",
+        rasterize=False,
+        file_pattern="NHDWaterbody",
+    ),
+
+    # Note: USGS WBD (GDB format) and 3DHP (GeoPackage) full-resolution products
+    # are excluded because the harmonizer only discovers .shp and .geojson vector
+    # files. The shapefile redistributions above are used instead.
+
     # Note: STAC datasets (TerraClimate, NOAA NClimGrid) are excluded because
     # Planetary Computer STAC assets require blob URL signing (authentication)
     # that the harmonizer cannot perform. Direct-download datasets only.
+
+    # Deferred — would expand water/contamination context but each needs a code
+    # change or preprocessing step not in scope right now:
+    #   • EPA Superfund NPL sites — only available via ArcGIS FeatureServer
+    #     query (?f=geojson) endpoints; the harmonizer's download_file assumes a
+    #     downloadable archive URL.
+    #   • USGS MRDS mineral occurrences — distributed as CSV only (no .shp);
+    #     needs a lat/lon → GeoJSON preprocessing step like parse_exni_to_geojson.
+    #   • PRISM 30-yr climate normals — Oregon State PRISM download endpoints
+    #     require a referer/cookie session and ship as .bil (not .tif).
+    #   • USDA SSURGO/gNATSGO hydrologic soil group, depth to bedrock, depth to
+    #     water table — only redistributed as ESRI File Geodatabase (.gdb), which
+    #     the harmonizer cannot read. Needs ogr2ogr preconversion per state.
     
     # ── Land Cover & Vegetation Change (Secondary Focus) ───────────────────────
     

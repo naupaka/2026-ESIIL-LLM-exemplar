@@ -1,0 +1,84 @@
+flowchart LR
+    %% ── External data sources ──
+    subgraph SRC["External Data Sources"]
+        direction TB
+        DANR["SD DANR<br/>EXNI listing page"]
+        PDFS["Application PDFs<br/>scanned + digital"]
+        EPA["EPA Uranium<br/>Mine Locations"]
+        BLM["BLM Mining<br/>Claims"]
+        NLCD["NLCD 2024<br/>Land Cover"]
+        HAN["Hansen<br/>Forest Cover / Loss"]
+        FBFM["LANDFIRE<br/>FBFM40 Fuel Models"]
+        TIG["Census TIGER<br/>AIANNH · County · State"]
+        MTBS["MTBS<br/>Fire Perimeters"]
+        MSBF["MS Building<br/>Footprints SD"]
+    end
+
+    %% ── Stage 1: PDF parser ──
+    subgraph S1["parse_exni_to_geojson.py"]
+        direction TB
+        DL["Crawl + download PDFs<br/>→ pdfs/YYYY-MM-DD/"]
+        EXT["Text extract<br/>pdfplumber → OCR fallback<br/>(pdf2image + tesseract)"]
+        PLSS["Parse PLSS<br/>Township / Range / Section regex"]
+        GEO["Section centroid math<br/>Black Hills Meridian"]
+        FALL["County polygon fallback<br/>when no PLSS found"]
+        EXNI[("danr_exni_uranium_<br/>applications.geojson")]
+    end
+
+    %% ── Stage 2: harmonizer ──
+    subgraph S2["black_hills_harmonization.py"]
+        direction TB
+        FETCH["Fetch + unzip<br/>17 datasets"]
+        REPRO["Reproject → EPSG:4326<br/>Resample → ~270 m<br/>Clip → BH bbox"]
+        RAST["Rasterize vectors<br/>where requested"]
+        HARM[("Harmonized layers<br/>GeoTIFF + GeoJSON")]
+        VIZ["Build visualizations<br/>per-layer PNG · composite PNG<br/>folium HTML map"]
+    end
+
+    %% ── Stage 3: sidebar injection ──
+    subgraph S3["inject_sidebar.py"]
+        INJ["Inject layer sidebar<br/>toggle · opacity · reorder"]
+    end
+
+    %% ── Outputs ──
+    subgraph OUT["Outputs (output/)"]
+        direction TB
+        COG["per-layer GeoTIFF<br/>+ GeoJSON"]
+        PNG["harmonized_visualization.png<br/>+ composite.png"]
+        HTML["harmonized_visualization.html<br/>interactive map with sidebar"]
+    end
+
+    DANR --> DL
+    PDFS --> DL
+    DL --> EXT --> PLSS --> GEO --> EXNI
+    PLSS -.no match.-> FALL --> EXNI
+
+    EXNI --> FETCH
+    EPA --> FETCH
+    BLM --> FETCH
+    NLCD --> FETCH
+    HAN --> FETCH
+    FBFM --> FETCH
+    TIG --> FETCH
+    MTBS --> FETCH
+    MSBF --> FETCH
+
+    FETCH --> REPRO --> RAST --> HARM
+    HARM --> VIZ
+    HARM --> COG
+    VIZ --> PNG
+    VIZ --> INJ --> HTML
+
+    classDef src fill:#e8f4ff,stroke:#3b7ddd,color:#0b3d91
+    classDef stage1 fill:#fff4e0,stroke:#d97706,color:#7a3d00
+    classDef stage2 fill:#e8fce8,stroke:#2e8b57,color:#0b4a1f
+    classDef stage3 fill:#f3e8ff,stroke:#7c3aed,color:#3b0764
+    classDef out fill:#fff0f3,stroke:#c026d3,color:#580b54
+    classDef store fill:#fffbe6,stroke:#a16207,color:#3f2d00
+
+    class DANR,PDFS,EPA,BLM,NLCD,HAN,FBFM,TIG,MTBS,MSBF src
+    class DL,EXT,PLSS,GEO,FALL stage1
+    class FETCH,REPRO,RAST,VIZ stage2
+    class INJ stage3
+    class COG,PNG,HTML out
+    class EXNI,HARM store
