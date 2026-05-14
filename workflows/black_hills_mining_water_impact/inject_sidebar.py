@@ -224,6 +224,39 @@ SIDEBAR_HTML = """
 """
 
 
+def tag_legend_swatches(html: str, vector_pairs: list[tuple[str, str]]) -> tuple[str, int]:
+    """Tag the harmonizer's vector legend rows with data-legend-layer="<jsvar>".
+
+    Lets the sidebar color picker locate and recolor the legend swatch when
+    a user changes a vector layer's color, keeping the legend in sync.
+
+    Returns (modified_html, count_of_tagged_rows).
+    """
+    # The harmonizer emits one row like:
+    #   <div style="display:flex;align-items:center;margin:3px 0;">
+    #     <i style="background:#XXXXXX;width:12px;height:12px;...">
+    #     </i> Display Name
+    #   </div>
+    # We match each row by its trailing label text — that's the only signal
+    # tying a legend row back to a specific layer.
+    tagged = 0
+    for js_var, label in vector_pairs:
+        pattern = re.compile(
+            r'<div(\s+style="display:flex;align-items:center;margin:3px 0;">'
+            r'<i style="background:#[0-9a-fA-F]{3,6}[^"]*"></i>\s*'
+            + re.escape(label)
+            + r'</div>)'
+        )
+        new_html, n = pattern.subn(
+            rf'<div data-legend-layer="{js_var}"\1',
+            html, count=1,
+        )
+        if n:
+            html = new_html
+            tagged += 1
+    return html, tagged
+
+
 def find_positron_tile_var(html: str) -> str | None:
     """Find the JS var name of Folium's Positron base tile layer.
 
@@ -415,6 +448,11 @@ def build_sidebar_js(layer_ids: list[str], map_var: str, positron_var: str | Non
             var l = getLayer(id);
             if (!l || typeof l.setStyle !== 'function') return;
             l.setStyle({{ color: this.value, fillColor: this.value }});
+            // Keep the static legend swatch in sync.
+            var swatch = document.querySelector(
+              '[data-legend-layer="' + id + '"] i'
+            );
+            if (swatch) swatch.style.background = this.value;
           }});
         }})(meta.id);
         colorRow.appendChild(colorLabel);
@@ -571,7 +609,16 @@ def inject_sidebar(html: str) -> str:
     for i, var in enumerate(layer_ids):
         print(f"    {i:2d}. {var[:50]}  →  {LAYER_META[i]['label']}")
 
-    # 5. Inject CSS into <head>
+    # 5. Tag the legend's vector swatches so the color picker can keep them in sync.
+    vector_pairs = [
+        (var, LAYER_META[i]["label"])
+        for i, var in enumerate(layer_ids)
+        if var.startswith("geo_json_")
+    ]
+    html, tagged = tag_legend_swatches(html, vector_pairs)
+    print(f"  Tagged {tagged}/{len(vector_pairs)} legend swatches for color sync")
+
+    # 6. Inject CSS into <head>
     css_block = f"<style>\n{SIDEBAR_CSS}\n</style>\n"
     html = html.replace("</head>", css_block + "</head>", 1)
 
@@ -658,6 +705,9 @@ def strip_old_injection(html: str) -> str:
         r'\s*<script>\s*\(function\(\)\s*\{[\s\S]*?var _mapVar\s*=[\s\S]*?</script>\s*',
         '', html, flags=re.DOTALL,
     )
+
+    # 7. Strip any prior legend-row tags so they can be re-applied cleanly.
+    html = re.sub(r' data-legend-layer="[^"]*"', '', html)
 
     return html
 
