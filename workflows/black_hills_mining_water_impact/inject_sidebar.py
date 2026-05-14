@@ -39,6 +39,10 @@ LAYER_UI: dict[str, dict] = {
                                     "tooltip_fields": ["Name", "HUC8", "States"]},
     "nhd_waterbodies":             {"icon": "🏞️", "default_opacity": 0.7,
                                     "tooltip_fields": ["GNIS_Name", "FType"]},
+    "nhd_flowlines":               {"icon": "🌊", "default_opacity": 0.7,
+                                    "tooltip_fields": ["GNIS_Name", "FType", "LengthKM"]},
+    "watersheds_huc12":            {"icon": "💧", "default_opacity": 0.4,
+                                    "tooltip_fields": ["Name", "HUC12", "States"]},
     "nlcd_2024":                   {"icon": "🌿", "default_opacity": 0.7},
     "hansen_forest_loss":          {"icon": "🌲", "default_opacity": 0.7},
     "hansen_tree_cover_2000":      {"icon": "🌳", "default_opacity": 0.7},
@@ -52,6 +56,8 @@ LAYER_UI: dict[str, dict] = {
     "mtbs_burned_areas":           {"icon": "🔴", "default_opacity": 0.7,
                                     "tooltip_fields": ["incid_name", "ig_date", "burnbndac"]},
     "building_footprints_sd":      {"icon": "🏠", "default_opacity": 0.6},
+    "building_footprints_wy":      {"icon": "🏠", "default_opacity": 0.6},
+    "building_footprints_ne":      {"icon": "🏠", "default_opacity": 0.6},
 }
 
 _UI_FALLBACK = {"icon": "📊", "default_opacity": 0.7, "tooltip_fields": []}
@@ -271,18 +277,27 @@ def build_sidebar_js(layer_ids: list[str], map_var: str) -> str:
       cb.className = 'layer-toggle';
       cb.checked = false;
       cb.title = 'Toggle visibility';
-      (function(id) {{
+      // Hide via opacity rather than removeLayer/addTo: re-adding a GeoJson
+      // layer in Leaflet 1.x doesn't reliably re-attach its SVG paths, so
+      // toggled layers would silently fail to render.
+      function applyOpacity(l, op) {{
+        if (!l) return;
+        if (typeof l.setOpacity === 'function') {{
+          l.setOpacity(op);
+        }} else if (typeof l.setStyle === 'function') {{
+          l.setStyle({{ opacity: op, fillOpacity: op * 0.5 }});
+        }}
+      }}
+      (function(id, sliderId) {{
         cb.addEventListener('change', function() {{
-          var map = getMap(), l = getLayer(id);
-          if (!map || !l) return;
-          if (this.checked) {{ l.addTo(map); }} else {{ map.removeLayer(l); }}
+          var l = getLayer(id);
+          var sl = document.getElementById(sliderId);
+          var v = sl ? parseFloat(sl.value) : 1;
+          applyOpacity(l, this.checked ? v : 0);
         }});
-      }})(meta.id);
-      // Default to off — remove the layer that Folium auto-added.
-      (function(id) {{
-        var map = getMap(), l = getLayer(id);
-        if (map && l && map.hasLayer(l)) {{ map.removeLayer(l); }}
-      }})(meta.id);
+      }})(meta.id, 'sl_' + meta.id);
+      // Default to off — hide every layer once at init.
+      applyOpacity(getLayer(meta.id), 0);
 
       row.appendChild(handle);
       row.appendChild(iconEl);
@@ -301,20 +316,16 @@ def build_sidebar_js(layer_ids: list[str], map_var: str) -> str:
       slider.type = 'range';
       slider.min = 0; slider.max = 1; slider.step = 0.05;
       slider.value = meta.op;
+      slider.id = 'sl_' + meta.id;
       slider.className = 'opacity-slider';
-      (function(id, lbl) {{
+      (function(id, lbl, chkbox) {{
         slider.addEventListener('input', function() {{
           lbl.textContent = Math.round(this.value * 100) + '%';
-          var l = getLayer(id);
-          if (!l) return;
-          var v = parseFloat(this.value);
-          if (typeof l.setOpacity === 'function') {{
-            l.setOpacity(v);
-          }} else if (typeof l.setStyle === 'function') {{
-            l.setStyle({{ opacity: v, fillOpacity: v * 0.5 }});
-          }}
+          // Slider only affects the map when the layer's checkbox is on.
+          if (!chkbox.checked) return;
+          applyOpacity(getLayer(id), parseFloat(this.value));
         }});
-      }})(meta.id, opLabel);
+      }})(meta.id, opLabel, cb);
 
       opRow.appendChild(opLabel);
       opRow.appendChild(slider);
@@ -374,7 +385,9 @@ def build_sidebar_js(layer_ids: list[str], map_var: str) -> str:
     if (!getMap()) {{ setTimeout(init, 200); return; }}
     buildSidebar();
     bindTooltips();
-    reorderLayers();
+    // No reorderLayers() on init — Folium's addTo order is already correct,
+    // and bringToFront() on dense vector layers (NHD flowlines, HUC-12) is
+    // slow enough to trigger the browser's slow-script dialog.
   }}
 
   // The script runs after </html>, so readyState is always 'complete'.

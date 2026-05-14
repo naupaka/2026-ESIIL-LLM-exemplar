@@ -757,10 +757,18 @@ def discover_dataset_file(dataset_dir: Path, data_type: str, file_pattern: str |
             + list(dataset_dir.rglob("*.shp"))
         )
 
+        # Fall back to multi-layer datasources (File Geodatabase, GeoPackage).
+        # We convert the matching layer to GeoJSON so the rest of the pipeline
+        # — which assumes one feature collection per file — keeps working.
+        if not candidates:
+            multilayer = _find_multilayer_datasource(dataset_dir)
+            if multilayer is not None:
+                return _convert_layer_to_geojson(multilayer, dataset_dir, file_pattern)
+
     if not candidates:
         raise FileNotFoundError(
             f"No {data_type} files found in {dataset_dir}. "
-            f"Expected {'*.tif / *.tiff / *.img' if data_type == 'raster' else '*.geojson / *.shp'} files."
+            f"Expected {'*.tif / *.tiff / *.img' if data_type == 'raster' else '*.geojson / *.shp / *.gdb / *.gpkg'} files."
         )
 
     if file_pattern:
@@ -776,6 +784,47 @@ def discover_dataset_file(dataset_dir: Path, data_type: str, file_pattern: str |
             print(f"    (skipped: {c.name})")
 
     return candidates[0]
+
+
+def _find_multilayer_datasource(dataset_dir: Path) -> Path | None:
+    """Return the first .gdb (directory) or .gpkg (file) under dataset_dir, or None."""
+    for p in dataset_dir.rglob("*.gdb"):
+        if p.is_dir():
+            return p
+    for p in dataset_dir.rglob("*.gpkg"):
+        if p.is_file():
+            return p
+    return None
+
+
+def _convert_layer_to_geojson(datasource: Path, output_dir: Path, file_pattern: str | None) -> Path:
+    """Pick one layer from a .gdb / .gpkg and convert it to GeoJSON via ogr2ogr."""
+    from src._gdal_utils import ogr2ogr as _ogr2ogr, ogrinfo_layers as _ogrinfo_layers
+
+    layers = _ogrinfo_layers(datasource)
+    if not layers:
+        raise FileNotFoundError(f"No layers found in multilayer datasource: {datasource}")
+
+    chosen = layers[0]
+    if file_pattern:
+        matches = [layer for layer in layers if file_pattern.lower() in layer.lower()]
+        if matches:
+            chosen = matches[0]
+        else:
+            print(
+                f"  WARNING: file_pattern {file_pattern!r} matched no layers in "
+                f"{datasource.name}; using first ({chosen})"
+            )
+
+    if len(layers) > 1:
+        print(f"  {len(layers)} layers in {datasource.name}, using: {chosen}")
+        for layer in layers:
+            if layer != chosen:
+                print(f"    (skipped: {layer})")
+
+    out = output_dir / f"{datasource.stem}__{chosen}.geojson"
+    _ogr2ogr(datasource, out, layer=chosen, output_format="GeoJSON")
+    return out
 
 
 # Known color table URLs for common datasets
@@ -2549,11 +2598,11 @@ def _create_interactive_visualization_impl(
     center_lat = (ymin + ymax) / 2
     center_lon = (xmin + xmax) / 2
     
-    # Create base map with clean styling (CartoDB positron is clean and doesn't compete with data)
+    # Create base map with clean styling (CartoDB positron is clean and doesn't compete with data).
     m = folium.Map(
         location=[center_lat, center_lon],
         zoom_start=10,
-        tiles=None  # We'll add our own base layer
+        tiles=None,  # We'll add our own base layer
     )
     
     # Add CartoDB positron base layer (clean, light background)
@@ -2582,15 +2631,23 @@ def _create_interactive_visualization_impl(
             # Read the GeoJSON as raw JSON (no geopandas — avoids loading into RAM)
             size_mb = path.stat().st_size / 1024 / 1024
 
-            # Shapefiles must be converted to GeoJSON; also auto-simplify large layers
-            if path.suffix.lower() == '.shp' or size_mb > 50:
-                xmin_t, ymin_t, xmax_t, ymax_t = target_extent
-                tol = min(xmax_t - xmin_t, ymax_t - ymin_t) * 0.001 if size_mb > 50 else None
+            # Simplify every non-trivial vector layer before embedding into the
+            # HTML, with a sliding tolerance so very large layers shrink more
+            # aggressively. Tolerance is a fraction of the smaller extent
+            # dimension, which roughly tracks pixel size at typical zoom.
+            xmin_t, ymin_t, xmax_t, ymax_t = target_extent
+            base_tol = min(xmax_t - xmin_t, ymax_t - ymin_t) * 0.001
+            if size_mb > 100:
+                tol = base_tol * 3   # ~1 km at the Black Hills extent
+            elif size_mb > 25:
+                tol = base_tol * 1.5
+            else:
+                tol = base_tol
+
+            needs_conversion = path.suffix.lower() == '.shp' or size_mb > 2
+            if needs_conversion:
                 if size_mb > 50:
-                    _log(
-                        f"  Large vector ({size_mb:.0f} MB) — simplifying with ogr2ogr...",
-                        verbose,
-                    )
+                    _log(f"  Large vector ({size_mb:.0f} MB) — simplifying with ogr2ogr...", verbose)
                 try:
                     from src._gdal_utils import ogr2ogr as _ogr2ogr
                     import tempfile
@@ -2598,8 +2655,8 @@ def _create_interactive_visualization_impl(
                         _ogr2ogr(path, Path(tmp.name), simplify=tol)
                         with open(tmp.name) as f:
                             geojson_data = json.load(f)
+                        simplified_mb = Path(tmp.name).stat().st_size / 1024 / 1024
                         if size_mb > 50:
-                            simplified_mb = Path(tmp.name).stat().st_size / 1024 / 1024
                             _log(f"  Simplified to ~{simplified_mb:.0f} MB", verbose)
                         Path(tmp.name).unlink(missing_ok=True)
                 except (ImportError, RuntimeError):

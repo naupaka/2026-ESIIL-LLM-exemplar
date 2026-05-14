@@ -126,9 +126,7 @@ DATASETS = [
     ),
 
     # USGS National Hydrography Dataset — surface waterbodies (lakes, ponds, reservoirs).
-    # HU4=1012 (Cheyenne basin) covers the southern Black Hills; flowlines from the
-    # same bundle are intentionally skipped — at ~300 MB the shapefile is too large
-    # to harmonize on small machines.
+    # HU4=1012 (Cheyenne basin) covers the southern Black Hills.
     DatasetSpec(
         name="nhd_waterbodies",
         display_name="Surface Waterbodies (NHD)",
@@ -139,9 +137,34 @@ DATASETS = [
         file_pattern="NHDWaterbody",
     ),
 
-    # Note: USGS WBD (GDB format) and 3DHP (GeoPackage) full-resolution products
-    # are excluded because the harmonizer only discovers .shp and .geojson vector
-    # files. The shapefile redistributions above are used instead.
+    # USGS NHD Flowlines — rivers, streams, ditches. Same HU4=1012 bundle as
+    # waterbodies above; previously skipped on small machines (~300 MB shapefile).
+    DatasetSpec(
+        name="nhd_flowlines",
+        display_name="Streams & Rivers (NHD)",
+        description="USGS NHD flowlines (Cheyenne HU4=1012)",
+        url="https://prd-tnm.s3.amazonaws.com/StagedProducts/Hydrography/NHD/HU4/Shape/NHD_H_1012_HU4_Shape.zip",
+        data_type="vector",
+        rasterize=False,
+        file_pattern="NHDFlowline",
+    ),
+
+    # USGS Watershed Boundary Dataset — HUC-12 sub-watersheds from the full-res
+    # File Geodatabase (Missouri region, HU2=10). HUC-12 is the finest sub-basin
+    # level — useful for tracing contamination from a specific mine claim.
+    # Uses the .gdb format support in geospatial_harmonizer.discover_dataset_file.
+    DatasetSpec(
+        name="watersheds_huc12",
+        display_name="Sub-watersheds (HUC-12)",
+        description="USGS WBD HUC-12 sub-watersheds (Missouri region, full-res GDB)",
+        url="https://prd-tnm.s3.amazonaws.com/StagedProducts/Hydrography/WBD/HU2/GDB/WBD_10_HU2_GDB.zip",
+        data_type="vector",
+        rasterize=False,
+        file_pattern="WBDHU12",
+    ),
+
+    # Note: USGS 3DHP (GeoPackage), SSURGO/gNATSGO (.gdb) — direct download URLs
+    # need verification; add when confirmed. Format support is now in place.
 
     # Note: STAC datasets (TerraClimate, NOAA NClimGrid) are excluded because
     # Planetary Computer STAC assets require blob URL signing (authentication)
@@ -256,6 +279,28 @@ DATASETS = [
         display_name="Building Footprints SD",
         description="Microsoft building footprints (South Dakota)",
         url="https://minedbuildings.z5.web.core.windows.net/legacy/usbuildings-v2/SouthDakota.geojson.zip",
+        data_type="vector",
+        rasterize=True,
+        burn_value=1,
+    ),
+
+    # Microsoft Building Footprints Wyoming (covers the western buffer of the extent)
+    DatasetSpec(
+        name="building_footprints_wy",
+        display_name="Building Footprints WY",
+        description="Microsoft building footprints (Wyoming)",
+        url="https://minedbuildings.z5.web.core.windows.net/legacy/usbuildings-v2/Wyoming.geojson.zip",
+        data_type="vector",
+        rasterize=True,
+        burn_value=1,
+    ),
+
+    # Microsoft Building Footprints Nebraska (covers the southeastern buffer)
+    DatasetSpec(
+        name="building_footprints_ne",
+        display_name="Building Footprints NE",
+        description="Microsoft building footprints (Nebraska)",
+        url="https://minedbuildings.z5.web.core.windows.net/legacy/usbuildings-v2/Nebraska.geojson.zip",
         data_type="vector",
         rasterize=True,
         burn_value=1,

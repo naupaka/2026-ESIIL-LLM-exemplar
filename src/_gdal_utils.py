@@ -54,6 +54,7 @@ def ogr2ogr(
     sql: str | None = None,
     output_format: str = "GeoJSON",
     simplify: float | None = None,
+    layer: str | None = None,
     extra_args: list[str] | None = None,
 ) -> Path:
     """Run ``ogr2ogr`` to reproject, clip, filter, or convert a vector file.
@@ -87,6 +88,10 @@ def ogr2ogr(
         out.unlink()
 
     cmd += [str(out), str(input_path)]
+    # When input is a multi-layer datasource (.gdb / .gpkg), a trailing positional
+    # arg selects which layer to read.
+    if layer is not None:
+        cmd.append(layer)
 
     result = subprocess.run(cmd, capture_output=True, text=True)
     if result.returncode != 0:
@@ -125,6 +130,25 @@ def ogrinfo_bounds(
     if m is None:
         raise ValueError(f"Could not parse extent from ogrinfo output:\n{result.stdout}")
     return float(m.group(1)), float(m.group(2)), float(m.group(3)), float(m.group(4))
+
+
+def ogrinfo_layers(input_path: str | Path) -> list[str]:
+    """Return the list of layer names in a multi-layer datasource (.gdb / .gpkg).
+
+    Parses ``ogrinfo -ro -q``, which emits one ``Layer: <name> (<geomtype>)``
+    line per layer (optionally nested under ``Group <name>:`` headers in
+    FileGDB output). Older GDAL builds use ``N: <name>`` instead — handled too.
+    """
+    result = subprocess.run(
+        [_OGRINFO, "-ro", "-q", str(input_path)],
+        check=True, capture_output=True, text=True,
+    )
+    layers: list[str] = []
+    for line in result.stdout.splitlines():
+        m = re.match(r"\s*Layer:\s+(\S+)", line) or re.match(r"\s*\d+:\s*(\S+)", line)
+        if m:
+            layers.append(m.group(1))
+    return layers
 
 
 def ogrinfo_feature_count(
