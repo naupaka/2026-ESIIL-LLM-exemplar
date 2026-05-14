@@ -161,6 +161,23 @@ SIDEBAR_CSS = """
     cursor: pointer;
     accent-color: #2980b9;
 }
+.color-row {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    padding: 2px 0 0 24px;
+    font-size: 10px;
+    color: #999;
+}
+.color-row .color-label { flex-grow: 1; }
+.color-picker {
+    width: 22px; height: 14px;
+    border: 1px solid #ccc;
+    border-radius: 2px;
+    cursor: pointer;
+    padding: 0;
+    background: transparent;
+}
 """
 
 SIDEBAR_HTML = """
@@ -331,6 +348,33 @@ def build_sidebar_js(layer_ids: list[str], map_var: str) -> str:
 
       item.appendChild(row);
       item.appendChild(opRow);
+
+      // Color picker — only for vector layers (rasters don't support setStyle).
+      if (typeof lyr.setStyle === 'function') {{
+        var sampleFeat = (typeof lyr.getLayers === 'function') ? lyr.getLayers()[0] : null;
+        var initialColor = (sampleFeat && sampleFeat.options && sampleFeat.options.color) || '#3186cc';
+        var colorRow = document.createElement('div');
+        colorRow.className = 'color-row';
+        var colorLabel = document.createElement('span');
+        colorLabel.className = 'color-label';
+        colorLabel.textContent = 'Color';
+        var colorPicker = document.createElement('input');
+        colorPicker.type = 'color';
+        colorPicker.className = 'color-picker';
+        colorPicker.value = initialColor;
+        colorPicker.title = 'Change layer color';
+        (function(id) {{
+          colorPicker.addEventListener('input', function() {{
+            var l = getLayer(id);
+            if (!l || typeof l.setStyle !== 'function') return;
+            l.setStyle({{ color: this.value, fillColor: this.value }});
+          }});
+        }})(meta.id);
+        colorRow.appendChild(colorLabel);
+        colorRow.appendChild(colorPicker);
+        item.appendChild(colorRow);
+      }}
+
       list.appendChild(item);
     }});
   }}
