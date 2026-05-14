@@ -137,6 +137,19 @@ DATASETS = [
         file_pattern="NHDWaterbody",
     ),
 
+    # NRCS SSURGO soil polygons with dominant-component attributes (hydrologic
+    # soil group, drainage class, taxonomic order). The harmonized GeoJSON is
+    # pre-built by fetch_ssurgo.py (WFS GetFeature → SDA SQL attribute join);
+    # too much data to redownload on every harmonization run.
+    DatasetSpec(
+        name="ssurgo_soils",
+        display_name="Soil Map Units (SSURGO)",
+        description="NRCS SSURGO soil map units with hydrologic group + drainage class",
+        url=f"file://{(OUTPUT_DIR / 'ssurgo_with_attributes.geojson').resolve()}",
+        data_type="vector",
+        rasterize=False,
+    ),
+
     # USGS NHD Flowlines — rivers, streams, ditches. Same HU4=1012 bundle as
     # waterbodies above; previously skipped on small machines (~300 MB shapefile).
     DatasetSpec(

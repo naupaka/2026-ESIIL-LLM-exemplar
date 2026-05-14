@@ -126,6 +126,8 @@ class DatasetSpec:
     wcs_layer: str = None
     is_wms: bool = False
     wms_layer: str = None
+    is_wfs: bool = False
+    wfs_layer: str = None  # WFS typeName to request
     labels_url: str | None = None  # URL to a CSV with VALUE,LABEL columns for legend labels
     secondary_url: str | None = None  # Second OPeNDAP URL for derived variables (e.g. rhsmin for VPD)
     secondary_netcdf_variable: str | None = None  # Variable name in the secondary NetCDF
@@ -614,6 +616,80 @@ def download_wcs_coverage(
                 f"  Error: {e2}\n"
                 f"  Please check the WCS endpoint and provide a valid URL."
             ) from e2
+
+
+def download_wfs_features(
+    wfs_url: str,
+    layer: str,
+    bbox: tuple[float, float, float, float],
+    output_dir: Path,
+    output_filename: str,
+    *,
+    wfs_version: str = "1.1.0",
+    max_features: int | None = None,
+    verbose: bool = True,
+) -> Path:
+    """Download vector features from a WFS (Web Feature Service) endpoint.
+
+    Most public WFS endpoints (including NRCS Soil Data Mart) only emit GML,
+    so we save the GML response and convert it to GeoJSON via ogr2ogr — same
+    pattern as the rest of the harmonizer's vector pipeline.
+
+    bbox is (xmin, ymin, xmax, ymax) in EPSG:4326 (lon,lat). The function
+    sends a bbox in lon,lat order, which is what the NRCS endpoint expects;
+    some strictly spec-compliant WFS 1.1.0 servers want lat,lon for
+    EPSG:4326 and would need a different shim.
+    """
+    output_dir.mkdir(parents=True, exist_ok=True)
+    output_path = output_dir / output_filename
+    if output_path.exists():
+        _log(f"Using existing WFS download: {output_path}", verbose)
+        return output_path
+
+    params = {
+        "service": "WFS",
+        "version": wfs_version,
+        "request": "GetFeature",
+        "typeName": layer,
+        "bbox": f"{bbox[0]},{bbox[1]},{bbox[2]},{bbox[3]}",
+    }
+    if max_features is not None:
+        params["maxFeatures"] = str(max_features)
+
+    request_url = f"{wfs_url}?{urllib.parse.urlencode(params)}"
+    gml_path = output_dir / (output_path.stem + ".gml")
+
+    _log(f"Downloading WFS layer: {layer}", verbose)
+    _log(f"  URL: {request_url[:120]}...", verbose)
+    try:
+        req = urllib.request.Request(request_url, headers={"User-Agent": "Mozilla/5.0"})
+        with urllib.request.urlopen(req, timeout=300) as response:
+            with open(gml_path, "wb") as f:
+                shutil.copyfileobj(response, f)
+    except Exception as e:
+        raise DatasetDownloadError(
+            f"WFS request failed: {wfs_url}\n  layer={layer}\n  error={e}"
+        ) from e
+
+    # Server returns its ServiceException doc with HTTP 200 sometimes; sniff it.
+    head = gml_path.read_bytes()[:300]
+    if b"ServiceException" in head:
+        raise DatasetDownloadError(
+            f"WFS server returned an error for layer {layer!r}:\n"
+            f"  {head.decode('utf-8', errors='replace')}"
+        )
+
+    _log(f"  Downloaded {gml_path.name} ({gml_path.stat().st_size / 1024 / 1024:.2f} MB GML); converting to GeoJSON...", verbose)
+    from src._gdal_utils import ogr2ogr as _ogr2ogr
+    # WFS 1.1.0 with EPSG:4326 emits coordinates in lat,lon order per the
+    # OGC spec, but GDAL's GML driver defaults to assuming lon,lat. Without
+    # the swap, downstream bbox clipping throws every feature away.
+    # -oo SWAP_COORDINATES=YES tells the GML driver to swap on read.
+    _ogr2ogr(gml_path, output_path, output_format="GeoJSON",
+             extra_args=["-oo", "SWAP_COORDINATES=YES"])
+    gml_path.unlink(missing_ok=True)
+    _log(f"  WFS output: {output_path.name}", verbose)
+    return output_path
 
 
 def download_stac_item(
@@ -3237,6 +3313,18 @@ def _run_harmonization_inner(workflow: ExampleWorkflow, _wall_start: float) -> t
                     output_filename=f"{dataset.name}.tif",
                     width=grid.width,
                     height=grid.height,
+                    verbose=workflow.verbose,
+                )
+            # Check if URL is a WFS endpoint (vector features)
+            elif dataset.is_wfs and dataset.data_type == "vector":
+                # WFS bbox is geographic (lon,lat). Reuse download_bbox already
+                # reprojected to EPSG:4326 by _run_harmonization_inner.
+                source_file = download_wfs_features(
+                    wfs_url=dataset.url,
+                    layer=dataset.wfs_layer,
+                    bbox=download_bbox,
+                    output_dir=dataset_dir,
+                    output_filename=f"{dataset.name}.geojson",
                     verbose=workflow.verbose,
                 )
             # Check if URL is a WCS endpoint

@@ -41,6 +41,9 @@ LAYER_UI: dict[str, dict] = {
                                     "tooltip_fields": ["GNIS_Name", "FType"]},
     "nhd_flowlines":               {"icon": "🌊", "default_opacity": 0.7,
                                     "tooltip_fields": ["GNIS_Name", "FType", "LengthKM"]},
+    "ssurgo_soils":                {"icon": "🟫", "default_opacity": 0.5,
+                                    "tooltip_fields": ["muname", "hydgrp", "drainagecl",
+                                                       "taxorder", "compname"]},
     "watersheds_huc12":            {"icon": "💧", "default_opacity": 0.4,
                                     "tooltip_fields": ["Name", "HUC12", "States"]},
     "nlcd_2024":                   {"icon": "🌿", "default_opacity": 0.7},
@@ -50,16 +53,18 @@ LAYER_UI: dict[str, dict] = {
     "tribal_boundaries_aiannh":    {"icon": "🏛️", "default_opacity": 0.7,
                                     "tooltip_fields": ["NAMELSAD"]},
     "county_boundaries":           {"icon": "🗺️", "default_opacity": 0.6,
-                                    "tooltip_fields": ["NAME", "STATEFP"]},
+                                    "tooltip_fields": ["NAME", "STATEFP"],
+                                    "non_interactive": True},
     "state_boundaries":            {"icon": "🗾", "default_opacity": 0.6,
-                                    "tooltip_fields": ["NAME"]},
+                                    "tooltip_fields": ["NAME"],
+                                    "non_interactive": True},
     "mtbs_burned_areas":           {"icon": "🔴", "default_opacity": 0.7,
                                     "tooltip_fields": ["incid_name", "ig_date", "burnbndac"]},
     "building_footprints_sd":      {"icon": "🏠", "default_opacity": 0.6},
     "building_footprints_wy":      {"icon": "🏠", "default_opacity": 0.6},
 }
 
-_UI_FALLBACK = {"icon": "📊", "default_opacity": 0.7, "tooltip_fields": []}
+_UI_FALLBACK = {"icon": "📊", "default_opacity": 0.7, "tooltip_fields": [], "non_interactive": False}
 
 
 def _build_layer_meta() -> list[dict]:
@@ -76,6 +81,7 @@ def _build_layer_meta() -> list[dict]:
             "icon": ui.get("icon", _UI_FALLBACK["icon"]),
             "default_opacity": ui.get("default_opacity", _UI_FALLBACK["default_opacity"]),
             "tooltip_fields": ui.get("tooltip_fields", _UI_FALLBACK["tooltip_fields"]),
+            "non_interactive": ui.get("non_interactive", _UI_FALLBACK["non_interactive"]),
         })
     if missing:
         print(f"  Note: no LAYER_UI entry for {missing} — using defaults")
@@ -278,12 +284,13 @@ def build_sidebar_js(layer_ids: list[str], map_var: str, positron_var: str | Non
         meta = LAYER_META[i]
         tooltip_fields = meta.get("tooltip_fields", [])
         js_layers.append(
-            "  {{id:{id!r}, label:{label!r}, icon:{icon!r}, op:{op}, tip:{tip}}}".format(
+            "  {{id:{id!r}, label:{label!r}, icon:{icon!r}, op:{op}, tip:{tip}, noInt:{ni}}}".format(
                 id=var,
                 label=meta["label"],
                 icon=meta["icon"],
                 op=meta["default_opacity"],
                 tip=str(tooltip_fields).replace("'", '"'),
+                ni="true" if meta.get("non_interactive") else "false",
             )
         )
     layers_js = "[\n" + ",\n".join(js_layers) + "\n]"
@@ -384,16 +391,30 @@ def build_sidebar_js(layer_ids: list[str], map_var: str, positron_var: str | Non
           l.setStyle({{ opacity: op, fillOpacity: op * 0.5 }});
         }}
       }}
-      (function(id, sliderId) {{
+      // Toggle pointer-events on a layer's SVG paths. Permanently non_interactive
+      // layers (e.g. state/county boundaries) always stay 'none' so mouseover
+      // falls through to specific layers underneath. For other vector layers,
+      // pointer-events follows the checkbox so hover only hits visible layers.
+      function applyInteractive(l, on, permanentlyOff) {{
+        if (permanentlyOff) on = false;
+        if (!l || typeof l.eachLayer !== 'function') return;
+        var pe = on ? 'auto' : 'none';
+        l.eachLayer(function(child) {{
+          if (child._path) child._path.style.pointerEvents = pe;
+        }});
+      }}
+      (function(id, sliderId, noInt) {{
         cb.addEventListener('change', function() {{
           var l = getLayer(id);
           var sl = document.getElementById(sliderId);
           var v = sl ? parseFloat(sl.value) : 1;
           applyOpacity(l, this.checked ? v : 0);
+          applyInteractive(l, this.checked, noInt);
         }});
-      }})(meta.id, 'sl_' + meta.id);
-      // Default to off — hide every layer once at init.
+      }})(meta.id, 'sl_' + meta.id, meta.noInt);
+      // Default to off — hide every layer once at init and disable hover.
       applyOpacity(getLayer(meta.id), 0);
+      applyInteractive(getLayer(meta.id), false, meta.noInt);
 
       row.appendChild(handle);
       row.appendChild(iconEl);
