@@ -57,7 +57,6 @@ LAYER_UI: dict[str, dict] = {
                                     "tooltip_fields": ["incid_name", "ig_date", "burnbndac"]},
     "building_footprints_sd":      {"icon": "🏠", "default_opacity": 0.6},
     "building_footprints_wy":      {"icon": "🏠", "default_opacity": 0.6},
-    "building_footprints_ne":      {"icon": "🏠", "default_opacity": 0.6},
 }
 
 _UI_FALLBACK = {"icon": "📊", "default_opacity": 0.7, "tooltip_fields": []}

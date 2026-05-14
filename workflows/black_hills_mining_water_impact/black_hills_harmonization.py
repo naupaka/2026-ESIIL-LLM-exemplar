@@ -15,9 +15,9 @@ Key Themes:
 - Fire history & fuel models
 
 Spatial Extent:
-- Extended Black Hills region with ~100 mile buffer
-- Bounding Box: (-105.5°, 42.5°, -101.5°, 45.5°) in EPSG:4326
-- Coverage: South Dakota, Wyoming, partial Nebraska
+- Core Black Hills region (SD/WY border, no buffer)
+- Bounding Box: (-104.6°, 43.4°, -103.3°, 44.6°) in EPSG:4326
+- Coverage: western South Dakota + adjacent Wyoming uplift
 - Tribal Priority: Pine Ridge, Rosebud, Black Hills Six Tribes lands
 
 Datasets:
@@ -60,9 +60,9 @@ from src.geospatial_harmonizer import (
     run_harmonization_example,
 )
 
-# Extended Black Hills bounding box (~100 mile buffer around core region)
-# Covers western SD, northeastern WY, and partial Nebraska
-BLACK_HILLS_EXTENT = (-105.5, 42.5, -101.5, 45.5)
+# Core Black Hills bounding box — tight to the uplift, no buffer.
+# Covers western SD into adjacent WY; ~1.3° wide × 1.2° tall.
+BLACK_HILLS_EXTENT = (-104.6, 43.4, -103.3, 44.6)
 
 # Common output settings
 TARGET_CRS = "EPSG:4326"
@@ -106,7 +106,7 @@ DATASETS = [
         name="danr_exni_applications",
         display_name="EXNI & Uranium Exploration Permits",
         description="SD DANR active exploration notices of intent and uranium permit applications",
-        url=f"file://{(OUTPUT_DIR / 'harmonized_danr_exni_applications.geojson').resolve()}",
+        url=f"file://{(OUTPUT_DIR / 'danr_exni_uranium_applications.geojson').resolve()}",
         data_type="vector",
         rasterize=False,
     ),
@@ -284,23 +284,12 @@ DATASETS = [
         burn_value=1,
     ),
 
-    # Microsoft Building Footprints Wyoming (covers the western buffer of the extent)
+    # Microsoft Building Footprints Wyoming (covers the western edge of the extent)
     DatasetSpec(
         name="building_footprints_wy",
         display_name="Building Footprints WY",
         description="Microsoft building footprints (Wyoming)",
         url="https://minedbuildings.z5.web.core.windows.net/legacy/usbuildings-v2/Wyoming.geojson.zip",
-        data_type="vector",
-        rasterize=True,
-        burn_value=1,
-    ),
-
-    # Microsoft Building Footprints Nebraska (covers the southeastern buffer)
-    DatasetSpec(
-        name="building_footprints_ne",
-        display_name="Building Footprints NE",
-        description="Microsoft building footprints (Nebraska)",
-        url="https://minedbuildings.z5.web.core.windows.net/legacy/usbuildings-v2/Nebraska.geojson.zip",
         data_type="vector",
         rasterize=True,
         burn_value=1,
