@@ -69,6 +69,11 @@ __pycache__/
 **/__pycache__/
 *.pyc
 
+# Python virtual environments — machine-specific, reproducible from requirements.txt
+.venv/
+venv/
+env/
+
 # Jupyter checkpoints
 .ipynb_checkpoints/
 **/.ipynb_checkpoints/
