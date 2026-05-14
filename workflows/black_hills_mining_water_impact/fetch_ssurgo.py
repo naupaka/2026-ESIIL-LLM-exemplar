@@ -44,6 +44,12 @@ OUTPUT_DIR = WORKFLOW_DIR / "output"
 INTERMEDIATE_GEOJSON = OUTPUT_DIR / "ssurgo_mapunitpoly.geojson"
 FINAL_GEOJSON = OUTPUT_DIR / "ssurgo_with_attributes.geojson"
 
+# Geometry simplification tolerance applied to the final file. At ~44° lat
+# 0.0001° ≈ 8 m, well below SSURGO's ~100 m typical map-unit scale, so the
+# result is visually lossless while bringing the GeoJSON from ~156 MB to
+# ~70 MB — under GitHub's 100 MB hard file limit.
+SIMPLIFY_TOLERANCE_DEG = 0.0001
+
 WFS_URL = "https://sdmdataaccess.nrcs.usda.gov/Spatial/SDMWGS84Geographic.wfs"
 SDA_URL = "https://sdmdataaccess.nrcs.usda.gov/Tabular/post.rest"
 
@@ -193,9 +199,28 @@ def main() -> int:
             merged += 1
     print(f"  Merged attributes into {merged} features")
 
-    with open(FINAL_GEOJSON, "w") as f:
+    # Write the full-precision FeatureCollection to a temp file, then run
+    # ogr2ogr to simplify geometry in-place. We do this as a separate step
+    # rather than simplifying in Python so we get GDAL's Douglas–Peucker
+    # implementation, which preserves topology better than naive vertex
+    # decimation.
+    tmp_full = OUTPUT_DIR / "_ssurgo_full_precision.geojson"
+    with open(tmp_full, "w") as f:
         json.dump(fc, f)
-    print(f"Wrote {FINAL_GEOJSON}")
+
+    from src._gdal_utils import ogr2ogr as _ogr2ogr  # type: ignore
+    FINAL_GEOJSON.unlink(missing_ok=True)
+    _ogr2ogr(
+        tmp_full,
+        FINAL_GEOJSON,
+        simplify=SIMPLIFY_TOLERANCE_DEG,
+        # SSURGO returns mixed Polygon/MultiPolygon after simplification —
+        # force MultiPolygon so the output layer has a uniform geometry type.
+        extra_args=["-nlt", "PROMOTE_TO_MULTI"],
+    )
+    tmp_full.unlink(missing_ok=True)
+    size_mb = FINAL_GEOJSON.stat().st_size / 1000 / 1000
+    print(f"Wrote {FINAL_GEOJSON} ({size_mb:.1f} MB, simplified at {SIMPLIFY_TOLERANCE_DEG}°)")
     return 0
 
 
